@@ -1,0 +1,85 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe CasSessionGuard::HeartbeatsController, type: :controller do
+  routes { CasSessionGuard::Engine.routes }
+
+  before do
+    configure_cas_session_guard
+
+    controller.session[:cas_user] = "admin@example.com"
+    controller.session[:cas_service_url] = "https://app.example.com/admin"
+    controller.session[:cas_last_valid_ticket] = "ST-123"
+    controller.session[:keep_alive_token] = "abc123"
+    request.headers["X-Keep-Alive-Token"] = "abc123"
+  end
+
+  after do
+    CasSessionGuard.reset_configuration!
+  end
+
+  describe "GET #show" do
+    it "returns 200 and ok: true when the session is valid" do
+      get :show
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to include("ok" => true)
+    end
+
+    it "updates cas_authenticated_at to now + validation_buffer on successful validation" do
+      allow(Time).to receive(:current).and_return(Time.utc(2026, 9, 19, 12, 0, 0))
+
+      get :show
+
+      expect(controller.session[:cas_authenticated_at]).to eq(Time.utc(2026, 9, 19, 12, 1, 15))
+    end
+
+    it "returns 403 when the heartbeat token is missing" do
+      request.headers["X-Keep-Alive-Token"] = ""
+
+      get :show
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 403 when the heartbeat token does not match the session token" do
+      request.headers["X-Keep-Alive-Token"] = "wrong-token"
+
+      get :show
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 401 when cas_user is missing" do
+      controller.session[:cas_user] = nil
+
+      get :show
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(JSON.parse(response.body)["reason"]).to eq("not_authenticated")
+    end
+
+    it "clears the session and returns 401 when remote validation fails" do
+      CasSessionGuard.configuration.session_validator = ->(**_args) { false }
+
+      get :show
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(controller.session[:cas_user]).to be_nil
+      expect(controller.session[:cas_authenticated_at]).to be_nil
+      expect(JSON.parse(response.body)["reason"]).to eq("remote_session_invalid")
+    end
+
+    it "returns the configured redirect URL in the JSON body" do
+      CasSessionGuard.configuration.session_validator = ->(**_args) { false }
+
+      get :show
+
+      body = JSON.parse(response.body)
+      expect(body["redirect_url"]).to eq(
+        "https://cas.example.com/login?service=https%3A%2F%2Fapp.example.com%2Fadmin"
+      )
+    end
+  end
+end

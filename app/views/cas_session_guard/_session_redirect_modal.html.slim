@@ -1,0 +1,47 @@
+#session-redirect-modal.modal.modal-blur.fade[
+  tabindex="-1"
+  aria-labelledby="session-redirect-modal-title"
+  aria-describedby="session-redirect-modal-detail"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  data-session-redirect-countdown=cas_session_modal_countdown_seconds
+  data-session-redirect-title=cas_session_modal_title
+  data-session-redirect-message=cas_session_modal_message
+  data-session-redirect-detail-text=cas_session_modal_detail
+  data-session-redirect-redirecting-text=cas_session_modal_redirecting_text
+]
+  .modal-dialog.modal-sm.modal-dialog-centered role="document"
+    .modal-content
+      .modal-status.bg-warning
+
+      .modal-body.text-center.py-4
+        = cas_session_redirect_icon
+
+        h3#session-redirect-modal-title.mb-1
+          = cas_session_modal_title
+
+        - if cas_session_modal_message.present?
+          .text-secondary.small[
+            data-session-redirect-message
+          ]
+            = cas_session_modal_message
+
+        - if cas_session_modal_detail.present?
+          .text-secondary.small[
+            id="session-redirect-modal-detail"
+            data-session-redirect-detail
+          ]
+            = cas_session_modal_detail
+
+        .display-4.fw-bold.text-warning.mt-3[
+          data-session-redirect-timer
+          aria-live="polite"
+          aria-atomic="true"
+        ]
+          = cas_session_modal_countdown_seconds
+
+        .text-secondary.small.mt-1[
+          data-session-redirect-footer
+        ]
+          = cas_session_modal_redirecting_text
