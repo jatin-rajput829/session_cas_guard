@@ -81,7 +81,8 @@ module CasinoClientSessionGuard
     end
 
     def turbo_or_xhr_request?
-      request.headers["Turbo-Frame"].present? ||
+      request.format.turbo_stream? ||
+        request.headers["Turbo-Frame"].present? ||
         request.xhr? ||
         request.headers["X-Requested-With"] == "XMLHttpRequest"
     end
