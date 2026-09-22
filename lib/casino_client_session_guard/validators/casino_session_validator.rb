@@ -2,7 +2,7 @@
 
 require "httparty"
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   module Validators
     class CasinoSessionValidator
       include HTTParty
@@ -39,11 +39,11 @@ module CasSessionGuard
       
         response.parsed_response&.dig('valid') == true
       rescue HTTParty::Error, Net::OpenTimeout, Net::ReadTimeout, SocketError => e
-        Rails.logger.warn("[CasSessionGuard::Validators::CasinoSessionValidator] Network error: #{error.class} - #{error.message}")
+        Rails.logger.warn("[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: #{error.class} - #{error.message}")
         false
       rescue StandardError => e
         Rails.logger.error(
-          "[CasSessionGuard::Validators::CasinoSessionValidator] Unexpected failure: #{error.class} - #{error.message}\n" \
+          "[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Unexpected failure: #{error.class} - #{error.message}\n" \
           "#{error.backtrace&.first(3)&.join("\n")}"
         )
         false
@@ -52,7 +52,7 @@ module CasSessionGuard
       private
 
       def configuration
-        CasSessionGuard.configuration
+        CasinoClientSessionGuard.configuration
       end
     end
   end

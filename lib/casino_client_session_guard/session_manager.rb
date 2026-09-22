@@ -5,11 +5,11 @@
 # When the current ticket is marked as signed out:
 
 # 1. The heartbeat or protected request treats the session as expired.
-# 2. CasSessionGuard clears local CAS session values.
+# 2. CasinoClientSessionGuard clears local CAS session values.
 # 3. The browser receives an unauthorized response or CAS redirect.
 # 4. The user must authenticate again.
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   class SessionManager
     def initialize(session)
       @session = session
@@ -60,7 +60,7 @@ module CasSessionGuard
     attr_reader :session
 
     def configuration
-      CasSessionGuard.configuration
+      CasinoClientSessionGuard.configuration
     end
 
     def user_key

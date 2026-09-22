@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CasSessionGuard::Configuration do
+RSpec.describe CasinoClientSessionGuard::Configuration do
   subject(:config) { described_class.new }
 
   describe "defaults" do

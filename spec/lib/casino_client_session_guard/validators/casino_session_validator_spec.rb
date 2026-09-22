@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CasSessionGuard::Validators::CasinoSessionValidator do
+RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
   let(:service_url) { "https://app.example.com/admin" }
   let(:ticket) { "ST-123" }
 
@@ -15,7 +15,7 @@ RSpec.describe CasSessionGuard::Validators::CasinoSessionValidator do
   end
 
   after do
-    CasSessionGuard.reset_configuration!
+    CasinoClientSessionGuard.reset_configuration!
   end
 
   describe "#valid?" do
@@ -59,8 +59,8 @@ RSpec.describe CasSessionGuard::Validators::CasinoSessionValidator do
     end
 
     it "returns false when the base URL or token is blank" do
-      CasSessionGuard.configuration.casino_base_url = nil
-      CasSessionGuard.configuration.casino_api_token = nil
+      CasinoClientSessionGuard.configuration.casino_base_url = nil
+      CasinoClientSessionGuard.configuration.casino_api_token = nil
 
       expect(validator.valid?).to be(false)
     end

@@ -4,7 +4,7 @@ require "rails"
 require "action_controller/railtie"
 require "action_view/railtie"
 
-require_relative "../../../lib/cas_session_guard"
+require_relative "../../../lib/casino_client_session_guard"
 
 module Dummy
   class Application < Rails::Application

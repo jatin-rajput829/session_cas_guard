@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CasSessionGuard::SessionManager do
+RSpec.describe CasinoClientSessionGuard::SessionManager do
   subject(:manager) { described_class.new(session) }
 
   let(:session) do
@@ -16,7 +16,7 @@ RSpec.describe CasSessionGuard::SessionManager do
   end
 
   before do
-    CasSessionGuard.configure do |config|
+    CasinoClientSessionGuard.configure do |config|
       config.cas_user_key = :cas_user
       config.cas_ticket_key = :cas_last_valid_ticket
       config.cas_service_url_key = :cas_service_url
@@ -27,7 +27,7 @@ RSpec.describe CasSessionGuard::SessionManager do
   end
 
   after do
-    CasSessionGuard.reset_configuration!
+    CasinoClientSessionGuard.reset_configuration!
   end
 
   describe "#expired?" do

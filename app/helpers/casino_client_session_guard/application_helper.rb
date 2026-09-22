@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   module ApplicationHelper
     def render_cas_session_redirect_modal
-      render "cas_session_guard/session_redirect_modal"
+      render "casino_client_session_guard/session_redirect_modal"
     end
 
     def cas_session_redirect_icon
-      icon = CasSessionGuard.configuration.modal_icon
+      icon = CasinoClientSessionGuard.configuration.modal_icon
 
       return icon.call(self) if icon.respond_to?(:call)
       return icon.html_safe if icon.present?
@@ -33,16 +33,16 @@ module CasSessionGuard
         [
           tag.meta(
             name: "cas-session-guard-token",
-            content: session[CasSessionGuard.configuration.keep_alive_token_key].to_s
+            content: session[CasinoClientSessionGuard.configuration.keep_alive_token_key].to_s
           ),
           tag.meta(
             name: "cas-session-guard-heartbeat-url",
-            content: CasSessionGuard.configuration.heartbeat_path
+            content: CasinoClientSessionGuard.configuration.heartbeat_path
           ),
           tag.meta(
             name: "cas-session-guard-heartbeat-interval",
             content: (
-              CasSessionGuard.configuration.heartbeat_interval.to_f * 1000
+              CasinoClientSessionGuard.configuration.heartbeat_interval.to_f * 1000
             ).to_i
           )
         ],
@@ -51,23 +51,23 @@ module CasSessionGuard
     end
 
     def cas_session_modal_title
-      CasSessionGuard.configuration.modal_title
+      CasinoClientSessionGuard.configuration.modal_title
     end
 
     def cas_session_modal_message
-      CasSessionGuard.configuration.modal_message
+      CasinoClientSessionGuard.configuration.modal_message
     end
 
     def cas_session_modal_detail
-      CasSessionGuard.configuration.modal_detail
+      CasinoClientSessionGuard.configuration.modal_detail
     end
 
     def cas_session_modal_countdown_seconds
-      CasSessionGuard.configuration.modal_countdown_seconds
+      CasinoClientSessionGuard.configuration.modal_countdown_seconds
     end
 
     def cas_session_modal_redirecting_text
-      CasSessionGuard.configuration.modal_redirecting_text
+      CasinoClientSessionGuard.configuration.modal_redirecting_text
     end
   end
 end

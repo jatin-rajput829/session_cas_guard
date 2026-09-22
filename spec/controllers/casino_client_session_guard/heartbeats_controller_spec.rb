@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe CasSessionGuard::HeartbeatsController, type: :controller do
-  routes { CasSessionGuard::Engine.routes }
+RSpec.describe CasinoClientSessionGuard::HeartbeatsController, type: :controller do
+  routes { CasinoClientSessionGuard::Engine.routes }
 
   before do
     configure_cas_session_guard
@@ -16,7 +16,7 @@ RSpec.describe CasSessionGuard::HeartbeatsController, type: :controller do
   end
 
   after do
-    CasSessionGuard.reset_configuration!
+    CasinoClientSessionGuard.reset_configuration!
   end
 
   describe "GET #show" do
@@ -61,7 +61,7 @@ RSpec.describe CasSessionGuard::HeartbeatsController, type: :controller do
     end
 
     it "clears the session and returns 401 when remote validation fails" do
-      CasSessionGuard.configuration.session_validator = ->(**_args) { false }
+      CasinoClientSessionGuard.configuration.session_validator = ->(**_args) { false }
 
       get :show
 
@@ -72,7 +72,7 @@ RSpec.describe CasSessionGuard::HeartbeatsController, type: :controller do
     end
 
     it "returns the configured redirect URL in the JSON body" do
-      CasSessionGuard.configuration.session_validator = ->(**_args) { false }
+      CasinoClientSessionGuard.configuration.session_validator = ->(**_args) { false }
 
       get :show
 

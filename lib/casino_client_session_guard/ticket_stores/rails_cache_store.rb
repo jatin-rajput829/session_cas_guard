@@ -1,4 +1,4 @@
-module CasSessionGuard
+module CasinoClientSessionGuard
   module TicketStores
     class RailsCacheStore
       def initialize(cache: Rails.cache, namespace: "cas_session_guard:slo")

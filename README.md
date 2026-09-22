@@ -1,6 +1,6 @@
-# CasSessionGuard
+# CasinoClientSessionGuard
 
-`cas_session_guard` provides reusable CAS session validation, heartbeat and Sign out handling for Rails applications.
+`casino_client_session_guard` provides reusable CAS session validation, heartbeat and Sign out handling for Rails applications.
 
 It is designed for applications that use CAS authentication and need a lightweight heartbeat endpoint to keep local CAS validation state fresh while still detecting expired or invalid CAS sessions.
 
@@ -53,13 +53,13 @@ Heartbeat interval: 60 seconds
 Add the gem to the host application:
 
 ```ruby
-gem "cas_session_guard"
+gem "casino_client_session_guard"
 ```
 
 If developing locally:
 
 ```ruby
-gem "cas_session_guard", path: "../cas_session_guard"
+gem "casino_client_session_guard", path: "../casino_client_session_guard"
 ```
 
 Then run:
@@ -76,7 +76,7 @@ If the heartbeat is only used inside the admin area, mount the engine inside you
 namespace :admin do
   root to: "sites#index"
 
-  mount CasSessionGuard::Engine => "/cas_session_guard", as: "cas_session_guard"
+  mount CasinoClientSessionGuard::Engine => "/cas_session_guard", as: "cas_session_guard"
 
   # Other admin routes...
 end
@@ -91,7 +91,7 @@ This creates the heartbeat URL:
 The internal gem route remains:
 
 ```ruby name=config/routes.rb
-CasSessionGuard::Engine.routes.draw do
+CasinoClientSessionGuard::Engine.routes.draw do
   get "heartbeat", to: "heartbeats#show", as: :heartbeat
 end
 ```
@@ -107,7 +107,7 @@ bin/rails routes | grep heartbeat
 Create an initializer:
 
 ```ruby name=config/initializers/cas_session_guard.rb
-CasSessionGuard.configure do |config|
+CasinoClientSessionGuard.configure do |config|
   config.session_validation = 5.minutes
   config.validation_buffer = 75.seconds
   config.heartbeat_interval = 60.seconds
@@ -160,7 +160,7 @@ Changing the initializer requires restarting the Rails server.
 The gem includes a reusable validator:
 
 ```ruby
-CasSessionGuard::Validators::CasinoSessionValidator
+CasinoClientSessionGuard::Validators::CasinoSessionValidator
 ```
 
 It validates the current CAS service URL and ticket through the configured Casino API.
@@ -196,7 +196,7 @@ cas_ticket=<ticket>
 The gem default validator is equivalent to:
 
 ```ruby
-CasSessionGuard::Validators::CasinoSessionValidator.new(
+CasinoClientSessionGuard::Validators::CasinoSessionValidator.new(
   cas_service_url: cas_service_url,
   cas_ticket: cas_ticket
 ).valid?
@@ -224,7 +224,7 @@ Example after CAS callback:
 session[:cas_user] = current_cas_user
 session[:cas_last_valid_ticket] = params[:ticket]
 session[:cas_service_url] = request.base_url + request.path
-session[:cas_authenticated_at] = Time.current + CasSessionGuard.configuration.validation_buffer
+session[:cas_authenticated_at] = Time.current + CasinoClientSessionGuard.configuration.validation_buffer
 session[:keep_alive_token] ||= SecureRandom.hex(32)
 ```
 
@@ -236,7 +236,7 @@ Include the concern in the controller that should be protected.
 
 ```ruby name=app/controllers/admin_controller.rb
 class AdminController < ApplicationController
-  include CasSessionGuard::Protectable
+  include CasinoClientSessionGuard::Protectable
 
   before_action :update_admin_user
   before_action :load_nav_sites
@@ -259,7 +259,7 @@ The gem concern handles the CAS filter flow internally.
 
 ### Local application logout
 
-Controllers that include `CasSessionGuard::Protectable` can use the gem's logout helper:
+Controllers that include `CasinoClientSessionGuard::Protectable` can use the gem's logout helper:
 
 ```ruby name=app/controllers/admin/dashboard_controller.rb
 module Admin
@@ -277,7 +277,7 @@ end
 
 ```text
 1. Saves the current CAS ticket.
-2. Clears local CasSessionGuard session values.
+2. Clears local CasinoClientSessionGuard session values.
 3. Marks the ticket as signed out in the sign-out store.
 4. Redirects the browser to the CAS logout endpoint.
 ```
@@ -296,9 +296,9 @@ head
 
   meta name="cas-session-guard-token" content=session[:keep_alive_token].to_s
 
-  meta name="cas-session-guard-heartbeat-url" content=CasSessionGuard.configuration.heartbeat_path
+  meta name="cas-session-guard-heartbeat-url" content=CasinoClientSessionGuard.configuration.heartbeat_path
 
-  meta name="cas-session-guard-heartbeat-interval" content=(CasSessionGuard.configuration.heartbeat_interval.to_i * 1000)
+  meta name="cas-session-guard-heartbeat-interval" content=(CasinoClientSessionGuard.configuration.heartbeat_interval.to_i * 1000)
 ```
 
 If your layout already has a `head` block, add only the meta tags inside the existing block.
@@ -418,7 +418,7 @@ session.delete(config.keep_alive_token_key)
 
 ## Heartbeat and session-expired modal
 
-`CasSessionGuard` checks the CAS session in the background. If the session is no longer valid, it displays a countdown modal and redirects the user.
+`CasinoClientSessionGuard` checks the CAS session in the background. If the session is no longer valid, it displays a countdown modal and redirects the user.
 
 The host application needs to render:
 
@@ -430,7 +430,7 @@ The host application needs to render:
 Configure the modal text, countdown duration, and icon in the host application:
 
 ```ruby name=config/initializers/cas_session_guard.rb
-CasSessionGuard.configure do |config|
+CasinoClientSessionGuard.configure do |config|
   config.modal_title = "Session expired"
   config.modal_message = "Your CAS session is no longer active."
   config.modal_detail = "For security, you will be redirected to sign in again."
@@ -473,8 +473,8 @@ The helper renders these three meta tags:
 
 ```slim name=app/views/layouts/application.html.slim
 meta name="cas-session-guard-token" content=session[:keep_alive_token].to_s
-meta name="cas-session-guard-heartbeat-url" content=CasSessionGuard.configuration.heartbeat_path
-meta name="cas-session-guard-heartbeat-interval" content=(CasSessionGuard.configuration.heartbeat_interval.to_i * 1000)
+meta name="cas-session-guard-heartbeat-url" content=CasinoClientSessionGuard.configuration.heartbeat_path
+meta name="cas-session-guard-heartbeat-interval" content=(CasinoClientSessionGuard.configuration.heartbeat_interval.to_i * 1000)
 ```
 
 They provide the following information to the gem's JavaScript:
@@ -493,7 +493,7 @@ For example, the generated HTML may look like:
 <meta name="cas-session-guard-heartbeat-interval" content="60000">
 ```
 
-The application should use the helper instead of writing these tags manually. This keeps the values synchronized with `CasSessionGuard.configure`.
+The application should use the helper instead of writing these tags manually. This keeps the values synchronized with `CasinoClientSessionGuard.configure`.
 
 ### 3. Render the session redirect modal
 
@@ -626,7 +626,7 @@ but the engine route proxy is not available.
 Use the configured path instead:
 
 ```slim
-meta name="cas-session-guard-heartbeat-url" content=CasSessionGuard.configuration.heartbeat_path
+meta name="cas-session-guard-heartbeat-url" content=CasinoClientSessionGuard.configuration.heartbeat_path
 ```
 
 ### `/cas_session_guard/heartbeat` goes to `handle_invalid_locale`
@@ -637,7 +637,7 @@ If the heartbeat is admin-only, mount inside admin routes:
 
 ```ruby
 namespace :admin do
-  mount CasSessionGuard::Engine => "/cas_session_guard", as: "cas_session_guard"
+  mount CasinoClientSessionGuard::Engine => "/cas_session_guard", as: "cas_session_guard"
 end
 ```
 

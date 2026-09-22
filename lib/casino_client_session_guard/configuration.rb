@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   class ConfigurationError < StandardError; end
 
   class Configuration
@@ -58,7 +58,7 @@ module CasSessionGuard
       @casino_api_token = nil
       @casino_validation_api_endpoint = nil
 
-      @sign_out_store = CasSessionGuard::TicketStores::RailsCacheStore.new
+      @sign_out_store = CasinoClientSessionGuard::TicketStores::RailsCacheStore.new
       @sign_out_ttl = 12.hours
 
       @modal_title = "Please wait"
@@ -69,7 +69,7 @@ module CasSessionGuard
       @modal_icon = nil
 
       @session_validator = lambda do |cas_service_url:, cas_ticket:|
-        CasSessionGuard::Validators::CasinoSessionValidator.new(
+        CasinoClientSessionGuard::Validators::CasinoSessionValidator.new(
           cas_service_url: cas_service_url,
           cas_ticket: cas_ticket
         ).valid?
@@ -84,7 +84,7 @@ module CasSessionGuard
       return if missing_keys.empty?
 
       raise ConfigurationError,
-            "CasSessionGuard configuration error: #{missing_keys.join(', ')} cannot be blank"
+            "CasinoClientSessionGuard configuration error: #{missing_keys.join(', ')} cannot be blank"
     end
   end
 end

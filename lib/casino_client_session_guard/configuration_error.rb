@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   class ConfigurationError < StandardError
   end
 end

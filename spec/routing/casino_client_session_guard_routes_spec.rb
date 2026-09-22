@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe "CasSessionGuard routes", type: :routing do
-  routes { CasSessionGuard::Engine.routes }
+RSpec.describe "CasinoClientSessionGuard routes", type: :routing do
+  routes { CasinoClientSessionGuard::Engine.routes }
 
   it "routes /heartbeat to the heartbeat controller" do
     expect(get: "/heartbeat").to route_to(

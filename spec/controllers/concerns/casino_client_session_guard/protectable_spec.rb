@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe CasSessionGuard::Protectable, type: :controller do
+RSpec.describe CasinoClientSessionGuard::Protectable, type: :controller do
   controller(ActionController::Base) do
-    include CasSessionGuard::Protectable
+    include CasinoClientSessionGuard::Protectable
 
     def index
       head :ok
@@ -16,7 +16,7 @@ RSpec.describe CasSessionGuard::Protectable, type: :controller do
   end
 
   after do
-    CasSessionGuard.reset_configuration!
+    CasinoClientSessionGuard.reset_configuration!
   end
 
   describe "#enforce_cas_session" do

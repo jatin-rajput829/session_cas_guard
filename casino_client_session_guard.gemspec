@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/cas_session_guard/version"
+require_relative "lib/casino_client_session_guard/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "cas_session_guard"
-  spec.version = CasSessionGuard::VERSION
+  spec.name = "casino_client_session_guard"
+  spec.version = CasinoClientSessionGuard::VERSION
   spec.authors = ["Jatin Rajput"]
   spec.email = ["hi.jatinrajput@gmail.com"]
 
@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
     Adds configurable CAS session validation, heartbeat support, Sign Out, Turbo/XHR
     expiration handling, and remote CAS ticket validation to Rails applications.
   DESCRIPTION
-  spec.homepage = "https://github.com/MobsterLimited/cas_session_guard"
+  spec.homepage = "https://github.com/MobsterLimited/casino_client_session_guard"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0"
 

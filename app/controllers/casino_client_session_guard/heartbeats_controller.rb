@@ -12,7 +12,7 @@
 #   ↓
 # Browser redirects to CAS login
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   class HeartbeatsController < ActionController::Base
 
     def show
@@ -48,7 +48,7 @@ module CasSessionGuard
     end
 
     def remote_session_valid?
-      validator = CasSessionGuard.configuration.session_validator
+      validator = CasinoClientSessionGuard.configuration.session_validator
       return false unless validator.respond_to?(:call)
 
       validator.call(
@@ -57,7 +57,7 @@ module CasSessionGuard
       ) == true
     rescue StandardError => error
       Rails.logger.error(
-        "[CasSessionGuard] remote CAS validation failed: " \
+        "[CasinoClientSessionGuard] remote CAS validation failed: " \
         "#{error.class}: #{error.message}"
       )
 
@@ -73,12 +73,12 @@ module CasSessionGuard
     end
 
     def reauthentication_url
-      callback = CasSessionGuard.configuration.reauthentication_url
+      callback = CasinoClientSessionGuard.configuration.reauthentication_url
 
       return callback.call(self) if callback.respond_to?(:call)
 
       raise ConfigurationError,
-            "CasSessionGuard.configuration.reauthentication_url must be configured"
+            "CasinoClientSessionGuard.configuration.reauthentication_url must be configured"
     end
   end
 end

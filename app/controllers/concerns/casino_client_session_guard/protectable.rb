@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   module Protectable
     extend ActiveSupport::Concern
 
@@ -45,9 +45,9 @@ module CasSessionGuard
       manager.clear!
 
       if ticket.present?
-        CasSessionGuard.configuration.sign_out_store.invalidate(
+        CasinoClientSessionGuard.configuration.sign_out_store.invalidate(
           ticket: ticket,
-          ttl: CasSessionGuard.configuration.sign_out_ttl
+          ttl: CasinoClientSessionGuard.configuration.sign_out_ttl
         )
       end
 
@@ -59,7 +59,7 @@ module CasSessionGuard
 
     def handle_missing_cas_session
       target_url = safe_cas_redirect_target
-      session[CasSessionGuard.configuration.cas_service_url_key] = target_url
+      session[CasinoClientSessionGuard.configuration.cas_service_url_key] = target_url
 
       login_url = cas_login_url(target_url)
 
@@ -79,7 +79,7 @@ module CasSessionGuard
     end
 
     def session_manager
-      @session_manager ||= CasSessionGuard::SessionManager.new(session)
+      @session_manager ||= CasinoClientSessionGuard::SessionManager.new(session)
     end
 
     def turbo_or_xhr_request?
@@ -121,7 +121,7 @@ module CasSessionGuard
     end
 
     def configured_fallback_url
-      callback = CasSessionGuard.configuration.service_url
+      callback = CasinoClientSessionGuard.configuration.service_url
 
       return callback.call(self) if callback.respond_to?(:call)
 
@@ -129,7 +129,7 @@ module CasSessionGuard
     end
 
     def manager_user_key
-      CasSessionGuard.configuration.cas_user_key
+      CasinoClientSessionGuard.configuration.cas_user_key
     end
   end
 end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module CasSessionGuard
+module CasinoClientSessionGuard
   class Engine < ::Rails::Engine
-    isolate_namespace CasSessionGuard
+    isolate_namespace CasinoClientSessionGuard
 
     initializer "cas_session_guard.helpers" do
       ActiveSupport.on_load(:action_controller_base) do
-        helper CasSessionGuard::ApplicationHelper
+        helper CasinoClientSessionGuard::ApplicationHelper
       end
     end
 

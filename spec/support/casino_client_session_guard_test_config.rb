@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module CasSessionGuardTestConfig
+module CasinoClientSessionGuardTestConfig
   DEFAULT_REAUTHENTICATION_URL =
     "https://cas.example.com/login?service=https%3A%2F%2Fapp.example.com%2Fadmin"
 
@@ -19,7 +19,7 @@ module CasSessionGuardTestConfig
     session_validator: nil,
     reauthentication_url: DEFAULT_REAUTHENTICATION_URL
   )
-    CasSessionGuard.configure do |config|
+    CasinoClientSessionGuard.configure do |config|
       config.cas_user_key = cas_user_key
       config.cas_ticket_key = cas_ticket_key
       config.cas_service_url_key = cas_service_url_key
@@ -47,14 +47,14 @@ module CasSessionGuardTestConfig
   end
 
   def reset_cas_session_guard_config!
-    CasSessionGuard.reset_configuration!
+    CasinoClientSessionGuard.reset_configuration!
   end
 end
 
 RSpec.configure do |config|
-  config.include CasSessionGuardTestConfig
+  config.include CasinoClientSessionGuardTestConfig
 
   config.after do
-    CasSessionGuard.reset_configuration!
+    CasinoClientSessionGuard.reset_configuration!
   end
 end
