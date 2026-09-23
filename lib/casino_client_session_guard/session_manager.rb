@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-### Sign-out detection
-# The session manager checks whether the current CAS ticket has been marked as signed out:
-# When the current ticket is marked as signed out:
-
-# 1. The heartbeat or protected request treats the session as expired.
-# 2. CasinoClientSessionGuard clears local CAS session values.
-# 3. The browser receives an unauthorized response or CAS redirect.
-# 4. The user must authenticate again.
+# SessionManager handles CAS session lifecycle management.
+# It stores and retrieves session data like user info, tickets, and validation timestamps.
+# 
+# Sign-out detection flow:
+# 1. CAS server marks the ticket as signed out
+# 2. SessionManager detects this during validation
+# 3. Session is cleared and user sees unauthorized response
+# 4. User is redirected to CAS login page
 
 module CasinoClientSessionGuard
   class SessionManager
@@ -15,6 +15,8 @@ module CasinoClientSessionGuard
       @session = session
     end
 
+    # Checks if the current session has expired based on the last validation time.
+    # Returns true if the time since last authentication exceeds the allowed validation period.
     def expired?
       authenticated_at = parsed_authenticated_at
       return false if authenticated_at.nil?
@@ -22,19 +24,27 @@ module CasinoClientSessionGuard
       authenticated_at < session_validation.ago
     end
 
+    # Checks if there is a valid user in the current session.
+    # Returns true if a user is logged in, false otherwise.
     def authenticated?
       session[user_key].present?
     end
 
+    # Updates the session validation timestamp to the current time plus a buffer.
+    # This keeps the session alive and prevents it from expiring immediately.
     def mark_cas_session_validated!
       session[authenticated_at_key] = Time.current + validation_buffer
     end
 
+    # Sets up a new authenticated session with initial timestamp and heartbeat token.
+    # The token is used by the browser to prove the request is coming from an authenticated session.
     def initialize_authenticated_session!
       session[authenticated_at_key] ||= Time.current + validation_buffer
       session[token_key] ||= SecureRandom.hex(32)
     end
 
+    # Removes all CAS-related session data.
+    # Called when user logs out or session is terminated.
     def clear!
       session.delete(user_key)
       session.delete(authenticated_at_key)
@@ -43,14 +53,17 @@ module CasinoClientSessionGuard
       session.delete(token_key)
     end
 
+    # Returns the heartbeat token used to verify browser requests.
     def heartbeat_token
       session[token_key]
     end
 
+    # Returns the CAS ticket for the current session.
     def cas_ticket
       session[ticket_key]
     end
 
+    # Returns the service URL that CAS uses to validate the ticket.
     def cas_service_url
       session[service_url_key]
     end
@@ -87,6 +100,8 @@ module CasinoClientSessionGuard
       configuration.session_validation
     end
 
+    # Safely parses the authentication timestamp from session storage.
+    # Handles both Time objects and strings, returning nil if parsing fails.
     def parsed_authenticated_at
       value = session[authenticated_at_key]
       return if value.blank?
