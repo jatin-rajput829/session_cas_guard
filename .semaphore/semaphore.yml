@@ -1,0 +1,51 @@
+version: v1.0
+
+name: CasinoClientSessionGuard CI Pipeline
+
+trigger:
+  branches:
+    - master
+    - develop
+
+global:
+  env_vars:
+    - name: BUNDLE_PATH
+      value: vendor/bundle
+    - name: RAILS_ENV
+      value: test
+    - name: COVERAGE
+      value: "true"
+
+blocks:
+  - name: "Setup & Test"
+    skip_on:
+      - pull_request
+    dependencies: []
+    run:
+      when: branch =~ '.*'
+
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sem-version ruby 3.3.8
+          - cache restore
+          - bundle config --local path vendor/bundle
+          - bundle install --jobs=4 --retry=3
+          - cache store
+
+      jobs:
+        - name: "RSpec - Unit & Integration Tests"
+          commands:
+            - bundle exec rspec --format progress --format json --out coverage/rspec.json
+
+promotions:
+  - name: "Deploy"
+    pipeline_file: ".semaphore/deploy.yml"
+    auto_promote:
+      when: "branch = 'master' AND result = 'passed'"
+
+  # - name: "Publish"
+  #   pipeline_file: ".semaphore/publish.yml"
+  #   auto_promote:
+  #     when: "branch = 'master' AND result = 'passed' AND tag =~ '.+'"
