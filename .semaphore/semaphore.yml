@@ -1,30 +1,26 @@
 version: v1.0
-
 name: CasinoClientSessionGuard CI Pipeline
 
-trigger:
-  branches:
-    - master
-    - develop
-
-global:
-  env_vars:
-    - name: BUNDLE_PATH
-      value: vendor/bundle
-    - name: RAILS_ENV
-      value: test
-    - name: COVERAGE
-      value: "true"
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
 
 blocks:
   - name: "Setup & Test"
-    skip_on:
-      - pull_request
     dependencies: []
     run:
-      when: branch =~ '.*'
+      when: "branch =~ '^(master|develop)$' AND pull_request !~ '.*'"
 
     task:
+      env_vars:
+        - name: BUNDLE_PATH
+          value: vendor/bundle
+        - name: RAILS_ENV
+          value: test
+        - name: COVERAGE
+          value: "true"
+
       prologue:
         commands:
           - checkout
@@ -44,8 +40,3 @@ promotions:
     pipeline_file: ".semaphore/deploy.yml"
     auto_promote:
       when: "branch = 'master' AND result = 'passed'"
-
-  # - name: "Publish"
-  #   pipeline_file: ".semaphore/publish.yml"
-  #   auto_promote:
-  #     when: "branch = 'master' AND result = 'passed' AND tag =~ '.+'"
