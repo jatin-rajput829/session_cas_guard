@@ -10,7 +10,7 @@ blocks:
   - name: "Setup & Test"
     dependencies: []
     run:
-      when: "branch =~ '^(master|develop)$' AND pull_request !~ '.*'"
+      when: "branch != 'master'"
 
     task:
       env_vars:
@@ -34,9 +34,3 @@ blocks:
         - name: "RSpec - Unit & Integration Tests"
           commands:
             - bundle exec rspec --format progress --format json --out coverage/rspec.json
-
-promotions:
-  - name: "Deploy"
-    pipeline_file: ".semaphore/deploy.yml"
-    auto_promote:
-      when: "branch = 'master' AND result = 'passed'"
