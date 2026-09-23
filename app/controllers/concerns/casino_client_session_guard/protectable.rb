@@ -69,6 +69,8 @@ module CasinoClientSessionGuard
         head :unauthorized
         return
       end
+
+      redirect_to login_url
     end
 
     def cas_login_url(service_url)
