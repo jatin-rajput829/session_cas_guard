@@ -64,7 +64,7 @@ module CasinoClientSessionGuard
       # Session storage keys - customize if you have conflicts with other gems
       @cas_user_key = :cas_user
       @cas_ticket_key = :cas_last_valid_ticket
-      @cas_service_url_key = :cas_service_url
+      @cas_service_url_key = :cas_last_valid_ticket_service # by default key is from cas-client
       @keep_alive_token_key = :keep_alive_token
 
       # Custom validation - use your own logic to validate CAS tickets
