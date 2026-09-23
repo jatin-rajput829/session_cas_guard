@@ -25,7 +25,7 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
     it "uses default CAS session keys" do
       expect(config.cas_user_key).to eq(:cas_user)
       expect(config.cas_ticket_key).to eq(:cas_last_valid_ticket)
-      expect(config.cas_service_url_key).to eq(:cas_service_url)
+      expect(config.cas_service_url_key).to eq(:cas_last_valid_ticket_service)
       expect(config.keep_alive_token_key).to eq(:keep_alive_token)
     end
   end

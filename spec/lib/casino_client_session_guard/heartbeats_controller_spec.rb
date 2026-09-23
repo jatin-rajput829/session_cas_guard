@@ -17,6 +17,12 @@ RSpec.describe CasinoClientSessionGuard::HeartbeatsController, type: :controller
       config.heartbeat_interval = 60.seconds
       config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
 
+      # Required configuration
+      config.casino_base_url = "https://casino.example.com"
+      config.casino_api_token = "test-token"
+      config.casino_validation_api_endpoint = "/api/v1/validate_ticket"
+      config.modal_icon = "⚠"
+
       config.session_validator = ->(cas_service_url:, cas_ticket:) do
         cas_service_url.present? && cas_ticket.present?
       end

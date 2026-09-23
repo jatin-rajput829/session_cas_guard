@@ -17,7 +17,8 @@ module CasinoClientSessionGuardTestConfig
     casino_api_token: "test-token",
     casino_validation_api_endpoint: "/api/v1/validate_ticket",
     session_validator: nil,
-    reauthentication_url: DEFAULT_REAUTHENTICATION_URL
+    reauthentication_url: DEFAULT_REAUTHENTICATION_URL,
+    modal_icon: "⚠"
   )
     CasinoClientSessionGuard.configure do |config|
       config.cas_user_key = cas_user_key
@@ -43,6 +44,8 @@ module CasinoClientSessionGuardTestConfig
       config.reauthentication_url = lambda do |_controller|
         reauthentication_url
       end
+
+      config.modal_icon = modal_icon
     end
   end
 

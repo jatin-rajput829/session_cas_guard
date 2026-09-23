@@ -7,7 +7,7 @@ RSpec.describe "CasinoClientSessionGuard routes", type: :routing do
 
   it "routes /heartbeat to the heartbeat controller" do
     expect(get: "/heartbeat").to route_to(
-      controller: "cas_session_guard/heartbeats",
+      controller: "casino_client_session_guard/heartbeats",
       action: "show"
     )
   end

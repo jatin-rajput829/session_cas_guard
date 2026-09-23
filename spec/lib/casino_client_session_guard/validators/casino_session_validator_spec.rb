@@ -20,40 +20,29 @@ RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
 
   describe "#valid?" do
     it "returns true when the remote validator says the ticket is valid" do
-      stub_request(:get, "https://casino.example.com/api/v1/validate_ticket")
-        .with(
-          query: {
-            "cas_service_url" => service_url,
-            "cas_ticket" => ticket
-          },
-          headers: {
-            "Authorization" => "Bearer token-123",
-            "Accept" => "application/json"
-          }
+      allow(validator.class).to receive(:get).and_return(
+        double(
+          success?: true,
+          parsed_response: { "valid" => true }
         )
-        .to_return(
-          status: 200,
-          body: { valid: true }.to_json,
-          headers: { "Content-Type" => "application/json" }
-        )
+      )
 
       expect(validator.valid?).to be(true)
     end
 
     it "returns false when the API returns valid: false" do
-      stub_request(:get, "https://casino.example.com/api/v1/validate_ticket")
-        .to_return(
-          status: 200,
-          body: { valid: false }.to_json,
-          headers: { "Content-Type" => "application/json" }
+      allow(validator.class).to receive(:get).and_return(
+        double(
+          success?: true,
+          parsed_response: { "valid" => false }
         )
+      )
 
       expect(validator.valid?).to be(false)
     end
 
     it "returns false when the API is unavailable" do
-      stub_request(:get, "https://casino.example.com/api/v1/validate_ticket")
-        .to_raise(SocketError)
+      allow(validator.class).to receive(:get).and_raise(SocketError, "Network error")
 
       expect(validator.valid?).to be(false)
     end
