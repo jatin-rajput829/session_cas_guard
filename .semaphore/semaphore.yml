@@ -1,0 +1,36 @@
+version: v1.0
+name: CasinoClientSessionGuard CI Pipeline
+
+agent:
+  machine:
+    type: e1-standard-4
+    os_image: ubuntu2204
+
+blocks:
+  - name: "Setup & Test"
+    dependencies: []
+    run:
+      when: "branch != 'master'"
+
+    task:
+      env_vars:
+        - name: BUNDLE_PATH
+          value: vendor/bundle
+        - name: RAILS_ENV
+          value: test
+        - name: COVERAGE
+          value: "true"
+
+      prologue:
+        commands:
+          - checkout
+          - sem-version ruby 3.3.8
+          - cache restore
+          - bundle config --local path vendor/bundle
+          - bundle install --jobs=4 --retry=3
+          - cache store
+
+      jobs:
+        - name: "RSpec - Unit & Integration Tests"
+          commands:
+            - bundle exec rspec --format progress --format json --out coverage/rspec.json
