@@ -56,14 +56,14 @@
 
   ## Features
 
-  - ✅ **Heartbeat Monitoring** - Continuously validates user sessions
-  - ✅ **CAS Integration** - Works with any CAS authentication provider
-  - ✅ **Automatic Logout** - Detects when users log out from CAS
-  - ✅ **Secure Tokens** - Uses cryptographically secure tokens and hashing
-  - ✅ **Turbo/AJAX Safe** - Handles modern JavaScript frameworks
-  - ✅ **Configurable** - Customize validation window, timeouts, UI
-  - ✅ **Admin Scoped** - Can be restricted to admin areas
-  - ✅ **Rails Native** - Uses Rails conventions and patterns
+  - **Heartbeat Monitoring** - Continuously validates user sessions
+  - **CAS Integration** - Works with any CAS authentication provider
+  - **Automatic Logout** - Detects when users log out from CAS
+  - **Secure Tokens** - Uses cryptographically secure tokens and hashing
+  - **Turbo/AJAX Safe** - Handles modern JavaScript frameworks
+  - **Configurable** - Customize validation window, timeouts, UI
+  - **Admin Scoped** - Can be restricted to admin areas
+  - **Rails Native** - Uses Rails conventions and patterns
 
   ## What It Does
 
@@ -310,12 +310,12 @@
 
   ## Security Features
 
-  - ✅ **Secure Token Comparison** - Uses constant-time comparison with hashing
-  - ✅ **Origin Validation** - Verifies referer comes from same domain
-  - ✅ **Ticket Stripping** - Removes single-use CAS ticket from redirect URLs
-  - ✅ **Session Clearing** - Comprehensive cleanup of all CAS data
-  - ✅ **Network Timeouts** - 3-second default (prevents hanging)
-  - ✅ **Error Logging** - Appropriate log levels for security events
+  - **Secure Token Comparison** - Uses constant-time comparison with hashing
+  - **Origin Validation** - Verifies referer comes from same domain
+  - **Ticket Stripping** - Removes single-use CAS ticket from redirect URLs
+  - **Session Clearing** - Comprehensive cleanup of all CAS data
+  - **Network Timeouts** - 3-second default (prevents hanging)
+  - **Error Logging** - Appropriate log levels for security events
 
   ## Troubleshooting
 
