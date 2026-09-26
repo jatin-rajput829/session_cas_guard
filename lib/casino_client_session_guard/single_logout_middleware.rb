@@ -2,9 +2,6 @@
 
 module CasinoClientSessionGuard
   class SingleLogoutMiddleware
-    OK_RESPONSE = [200, { "Content-Type" => "text/plain", "Content-Length" => "0" }, []].freeze
-    BAD_REQUEST_RESPONSE = [400, { "Content-Type" => "text/plain", "Content-Length" => "0" }, []].freeze
-
     def initialize(app)
       @app = app
     end
@@ -17,13 +14,13 @@ module CasinoClientSessionGuard
       return app.call(env) if logout_request.tickets.empty?
 
       logout_request.invalidate!
-      OK_RESPONSE
+      empty_response(200)
     rescue REXML::ParseException => error
       Rails.logger.warn(
         "[CasinoClientSessionGuard] single logout payload parse failed: " \
         "#{error.class}: #{error.message}"
       )
-      BAD_REQUEST_RESPONSE
+      empty_response(400)
     end
 
     private
@@ -36,6 +33,10 @@ module CasinoClientSessionGuard
 
     def configuration
       CasinoClientSessionGuard.configuration
+    end
+
+    def empty_response(status)
+      [status, { "Content-Type" => "text/plain", "Content-Length" => "0" }, []]
     end
 
     def build_logout_request(request)
