@@ -30,6 +30,16 @@ module CasinoClientSessionGuard
       session[user_key].present?
     end
 
+    def ticket_invalidated?
+      ticket = cas_ticket.to_s
+      return false if ticket.blank?
+
+      store = configuration.sign_out_store
+      return false unless store.respond_to?(:invalidated?)
+
+      store.invalidated?(ticket: ticket) == true
+    end
+
     # Updates the session validation timestamp to the current time plus a buffer.
     # This keeps the session alive and prevents it from expiring immediately.
     def mark_cas_session_validated!

@@ -19,6 +19,7 @@
   # config/initializers/cas_session_guard.rb
   CasinoClientSessionGuard.configure do |config|
     config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
+    config.single_logout_enabled = true
     config.casino_base_url = "https://cas.example.com"
     config.casino_api_token = Rails.application.credentials.dig(:casino, :api_token)
     config.casino_validation_api_endpoint = "/api/v1/validate_ticket"
@@ -55,14 +56,14 @@
 
   ## Features
 
-  - ✅ **Heartbeat Monitoring** - Continuously validates user sessions
-  - ✅ **CAS Integration** - Works with any CAS authentication provider
-  - ✅ **Automatic Logout** - Detects when users log out from CAS
-  - ✅ **Secure Tokens** - Uses cryptographically secure tokens and hashing
-  - ✅ **Turbo/AJAX Safe** - Handles modern JavaScript frameworks
-  - ✅ **Configurable** - Customize validation window, timeouts, UI
-  - ✅ **Admin Scoped** - Can be restricted to admin areas
-  - ✅ **Rails Native** - Uses Rails conventions and patterns
+  - **Heartbeat Monitoring** - Continuously validates user sessions
+  - **CAS Integration** - Works with any CAS authentication provider
+  - **Automatic Logout** - Detects when users log out from CAS
+  - **Secure Tokens** - Uses cryptographically secure tokens and hashing
+  - **Turbo/AJAX Safe** - Handles modern JavaScript frameworks
+  - **Configurable** - Customize validation window, timeouts, UI
+  - **Admin Scoped** - Can be restricted to admin areas
+  - **Rails Native** - Uses Rails conventions and patterns
 
   ## What It Does
 
@@ -120,6 +121,7 @@
   config.session_validation = 5.minutes              # Validation window
   config.validation_buffer = 75.seconds              # Extra time for safety
   config.heartbeat_interval = 60.seconds             # Browser check frequency
+  config.single_logout_enabled = true                # Handle CAS back-channel logout POSTs
   config.sign_out_ttl = 12.hours                     # How long to remember logouts
 
   config.modal_title = "Session expired"
@@ -136,6 +138,43 @@
   config.cas_service_url_key = :cas_service_url
   config.keep_alive_token_key = :keep_alive_token
   ```
+
+  ### Single Logout Setup
+
+  Use single logout if your CAS server sends back-channel logout notifications when users sign out.
+
+  Recommended configuration:
+
+  ```ruby
+  CasinoClientSessionGuard.configure do |config|
+    config.single_logout_enabled = true
+    config.sign_out_store = CasinoClientSessionGuard::TicketStores::RailsCacheStore.new
+    config.sign_out_ttl = 12.hours
+  end
+  ```
+
+  Recommended app setup:
+
+  1. Keep `config.single_logout_enabled = true` in staging and production when CAS can reach the app.
+  2. Mount the engine so the explicit `/logout` route exists as a fallback handler.
+  3. Expose your app with a CAS-reachable host, because some CAS servers POST logout notifications to the original service URL instead of the engine route.
+  4. Use a shared cache store in multi-node deployments so one app node can invalidate tickets seen by another node.
+
+  If a developer does not want SLO handling in a given environment, disable it:
+
+  ```ruby
+  CasinoClientSessionGuard.configure do |config|
+    config.single_logout_enabled = false
+  end
+  ```
+
+  When disabled:
+
+  - The middleware ignores CAS logout POSTs.
+  - The `/logout` engine route responds with `404`.
+  - The gem still supports heartbeat-based session detection.
+
+  For a full walkthrough, see [docs/single_logout_flow.md](docs/single_logout_flow.md).
 
   ## Controller Integration
 
@@ -271,12 +310,12 @@
 
   ## Security Features
 
-  - ✅ **Secure Token Comparison** - Uses constant-time comparison with hashing
-  - ✅ **Origin Validation** - Verifies referer comes from same domain
-  - ✅ **Ticket Stripping** - Removes single-use CAS ticket from redirect URLs
-  - ✅ **Session Clearing** - Comprehensive cleanup of all CAS data
-  - ✅ **Network Timeouts** - 3-second default (prevents hanging)
-  - ✅ **Error Logging** - Appropriate log levels for security events
+  - **Secure Token Comparison** - Uses constant-time comparison with hashing
+  - **Origin Validation** - Verifies referer comes from same domain
+  - **Ticket Stripping** - Removes single-use CAS ticket from redirect URLs
+  - **Session Clearing** - Comprehensive cleanup of all CAS data
+  - **Network Timeouts** - 3-second default (prevents hanging)
+  - **Error Logging** - Appropriate log levels for security events
 
   ## Troubleshooting
 

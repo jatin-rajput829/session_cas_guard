@@ -11,4 +11,11 @@ RSpec.describe "CasinoClientSessionGuard routes", type: :routing do
       action: "show"
     )
   end
+
+  it "routes /logout to the single logout controller" do
+    expect(post: "/logout").to route_to(
+      controller: "casino_client_session_guard/single_logouts",
+      action: "create"
+    )
+  end
 end
