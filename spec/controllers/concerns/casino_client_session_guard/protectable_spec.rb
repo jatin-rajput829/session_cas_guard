@@ -71,5 +71,24 @@ RSpec.describe CasinoClientSessionGuard::Protectable, type: :controller do
       expect(session[:cas_user]).to be_nil
       expect(session[:cas_authenticated_at]).to be_nil
     end
+
+    it "clears the session and returns unauthorized for XHR when the CAS ticket was invalidated" do
+      session[:cas_user] = "admin@example.com"
+      session[:cas_authenticated_at] = Time.current + 75.seconds
+      session[:cas_last_valid_ticket] = "ST-123"
+      request.headers["X-Requested-With"] = "XMLHttpRequest"
+
+      CasinoClientSessionGuard.configuration.sign_out_store.invalidate(
+        ticket: "ST-123",
+        ttl: 12.hours
+      )
+
+      get :index
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(response.headers["X-Session-Expired"]).to eq("true")
+      expect(session[:cas_user]).to be_nil
+      expect(session[:cas_last_valid_ticket]).to be_nil
+    end
   end
 end

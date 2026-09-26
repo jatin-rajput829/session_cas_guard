@@ -37,6 +37,7 @@ module CasinoClientSessionGuard
                   :casino_validation_api_endpoint,
 
                   # Sign-Out handling - how to track logged-out sessions
+                  :single_logout_enabled,
                   :sign_out_store,
                   :sign_out_ttl,
 
@@ -77,6 +78,7 @@ module CasinoClientSessionGuard
       @casino_validation_api_endpoint = nil
 
       # Track which CAS tickets have been logged out (default: Rails cache)
+      @single_logout_enabled = true
       @sign_out_store = CasinoClientSessionGuard::TicketStores::RailsCacheStore.new
       @sign_out_ttl = 12.hours
 

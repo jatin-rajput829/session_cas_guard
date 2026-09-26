@@ -13,6 +13,7 @@ module CasinoClientSessionGuardTestConfig
     validation_buffer: 75.seconds,
     heartbeat_interval: 60.seconds,
     heartbeat_path: "/admin/cas_session_guard/heartbeat",
+    single_logout_enabled: true,
     casino_base_url: "https://casino.example.com",
     casino_api_token: "test-token",
     casino_validation_api_endpoint: "/api/v1/validate_ticket",
@@ -30,6 +31,7 @@ module CasinoClientSessionGuardTestConfig
       config.validation_buffer = validation_buffer
       config.heartbeat_interval = heartbeat_interval
       config.heartbeat_path = heartbeat_path
+      config.single_logout_enabled = single_logout_enabled
 
       config.casino_base_url = casino_base_url
       config.casino_api_token = casino_api_token
@@ -56,6 +58,10 @@ end
 
 RSpec.configure do |config|
   config.include CasinoClientSessionGuardTestConfig
+
+  config.before do
+    Rails.cache.clear if defined?(Rails) && Rails.respond_to?(:cache) && Rails.cache.respond_to?(:clear)
+  end
 
   config.after do
     CasinoClientSessionGuard.reset_configuration!

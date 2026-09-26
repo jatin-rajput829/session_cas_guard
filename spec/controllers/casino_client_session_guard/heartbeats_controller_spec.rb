@@ -71,6 +71,20 @@ RSpec.describe CasinoClientSessionGuard::HeartbeatsController, type: :controller
       expect(JSON.parse(response.body)["reason"]).to eq("remote_session_invalid")
     end
 
+    it "clears the session and returns 401 when the CAS ticket was invalidated by back-channel logout" do
+      CasinoClientSessionGuard.configuration.sign_out_store.invalidate(
+        ticket: "ST-123",
+        ttl: 12.hours
+      )
+
+      get :show
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(controller.session[:cas_user]).to be_nil
+      expect(controller.session[:cas_last_valid_ticket]).to be_nil
+      expect(JSON.parse(response.body)["reason"]).to eq("remote_session_invalid")
+    end
+
     it "returns the configured redirect URL in the JSON body" do
       CasinoClientSessionGuard.configuration.session_validator = ->(**_args) { false }
 

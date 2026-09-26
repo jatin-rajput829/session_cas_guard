@@ -22,6 +22,11 @@ module CasinoClientSessionGuard
       # Second check: verify user is authenticated in local session
       return render_unauthorized("not_authenticated") unless session_manager.authenticated?
 
+      if session_manager.ticket_invalidated?
+        session_manager.clear!
+        return render_unauthorized("remote_session_invalid")
+      end
+
       # Third check: verify the CAS ticket is still valid with CAS provider
       unless remote_session_valid?
         session_manager.clear!

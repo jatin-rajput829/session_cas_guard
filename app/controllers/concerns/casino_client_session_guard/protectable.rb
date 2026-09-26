@@ -27,7 +27,7 @@ module CasinoClientSessionGuard
       manager = session_manager
 
       # Clear session if it has expired but user is still marked as authenticated
-      if manager.authenticated? && manager.expired?
+      if manager.authenticated? && (manager.expired? || manager.ticket_invalidated?)
         manager.clear!
       end
 

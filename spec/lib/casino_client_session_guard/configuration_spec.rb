@@ -22,6 +22,10 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
       expect(config.heartbeat_path).to eq("/cas_session_guard/heartbeat")
     end
 
+    it "enables single logout by default" do
+      expect(config.single_logout_enabled).to be(true)
+    end
+
     it "uses default CAS session keys" do
       expect(config.cas_user_key).to eq(:cas_user)
       expect(config.cas_ticket_key).to eq(:cas_last_valid_ticket)
@@ -36,11 +40,13 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
       config.validation_buffer = 90.seconds
       config.heartbeat_interval = 30.seconds
       config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
+      config.single_logout_enabled = false
 
       expect(config.session_validation).to eq(2.minutes)
       expect(config.validation_buffer).to eq(90.seconds)
       expect(config.heartbeat_interval).to eq(30.seconds)
       expect(config.heartbeat_path).to eq("/admin/cas_session_guard/heartbeat")
+      expect(config.single_logout_enabled).to be(false)
     end
   end
 end
