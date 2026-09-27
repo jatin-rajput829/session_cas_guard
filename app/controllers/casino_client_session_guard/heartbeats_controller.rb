@@ -17,24 +17,33 @@ module CasinoClientSessionGuard
     def show
       # First check: verify the browser sent a valid keep-alive token
       # This token is stored in an HTML meta tag on the client side
-      return head :forbidden unless valid_keep_alive_token?
+      unless valid_keep_alive_token?
+        instrument_heartbeat("forbidden", reason: "invalid_keep_alive_token")
+        return head :forbidden
+      end
 
       # Second check: verify user is authenticated in local session
-      return render_unauthorized("not_authenticated") unless session_manager.authenticated?
+      unless session_manager.authenticated?
+        instrument_heartbeat("unauthorized", reason: "not_authenticated")
+        return render_unauthorized("not_authenticated")
+      end
 
       if session_manager.ticket_invalidated?
         session_manager.clear!
+        instrument_heartbeat("unauthorized", reason: "ticket_invalidated")
         return render_unauthorized("remote_session_invalid")
       end
 
       # Third check: verify the CAS ticket is still valid with CAS provider
       unless remote_session_valid?
         session_manager.clear!
+        instrument_heartbeat("unauthorized", reason: "remote_session_invalid")
         return render_unauthorized("remote_session_invalid")
       end
 
       # All checks passed - update session timestamp to keep it alive
       session_manager.mark_cas_session_validated!
+      instrument_heartbeat("ok", reason: "validated")
 
       render json: { ok: true }, status: :ok
     end
@@ -105,6 +114,16 @@ module CasinoClientSessionGuard
 
       raise ConfigurationError,
             "CasinoClientSessionGuard.configuration.reauthentication_url must be configured"
+    end
+
+    def instrument_heartbeat(outcome, reason:)
+      CasinoClientSessionGuard::Observability.instrument(
+        "heartbeat",
+        outcome: outcome,
+        reason: reason,
+        authenticated: session_manager.authenticated?,
+        ticket_present: session_manager.cas_ticket.present?
+      )
     end
   end
 end

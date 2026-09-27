@@ -14,12 +14,14 @@ module CasinoClientSessionGuard
       return app.call(env) if logout_request.tickets.empty?
 
       logout_request.invalidate!
+      instrument_single_logout("intercepted", ticket_count: logout_request.tickets.size)
       empty_response(200)
     rescue REXML::ParseException => error
       Rails.logger.warn(
         "[CasinoClientSessionGuard] single logout payload parse failed: " \
         "#{error.class}: #{error.message}"
       )
+      instrument_single_logout("bad_request", error_class: error.class.name)
       empty_response(400)
     end
 
@@ -49,6 +51,16 @@ module CasinoClientSessionGuard
         logout_request_param: post_params["logoutRequest"] || request.GET["logoutRequest"],
         raw_payload: raw_payload,
         media_type: request.media_type
+      )
+    end
+
+    def instrument_single_logout(outcome, ticket_count: 0, error_class: nil)
+      CasinoClientSessionGuard::Observability.instrument(
+        "single_logout",
+        outcome: outcome,
+        ticket_count: ticket_count,
+        error_class: error_class,
+        source: "middleware"
       )
     end
   end

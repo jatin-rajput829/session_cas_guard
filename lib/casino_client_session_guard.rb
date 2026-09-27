@@ -9,6 +9,7 @@ require "securerandom"
 
 require_relative "casino_client_session_guard/version"
 require_relative "casino_client_session_guard/configuration"
+require_relative "casino_client_session_guard/observability"
 require_relative "casino_client_session_guard/session_manager"
 require_relative "casino_client_session_guard/single_logout_request"
 require_relative "casino_client_session_guard/single_logout_middleware"

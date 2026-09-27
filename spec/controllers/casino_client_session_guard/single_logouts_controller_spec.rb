@@ -26,12 +26,17 @@ RSpec.describe CasinoClientSessionGuard::SingleLogoutsController, type: :control
     end
 
     it "invalidates the submitted ticket directly" do
-      post :create, params: { ticket: "ST-123" }
+      events = capture_notifications("single_logout") { post :create, params: { ticket: "ST-123" } }
 
       expect(response).to have_http_status(:ok)
       expect(
         CasinoClientSessionGuard.configuration.sign_out_store.invalidated?(ticket: "ST-123")
       ).to be(true)
+      expect(events.last.payload).to include(
+        outcome: "processed",
+        ticket_count: 1,
+        source: "controller"
+      )
     end
 
     it "invalidates the ticket from a CAS logoutRequest payload" do

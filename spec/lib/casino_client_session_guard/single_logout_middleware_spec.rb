@@ -32,12 +32,19 @@ RSpec.describe CasinoClientSessionGuard::SingleLogoutMiddleware do
       "CONTENT_TYPE" => "application/x-www-form-urlencoded"
     )
 
-    status, = described_class.new(->(_env) { [404, { "Content-Type" => "text/plain" }, ["miss"]] }).call(env)
+    events = capture_notifications("single_logout") do
+      @status, = described_class.new(->(_env) { [404, { "Content-Type" => "text/plain" }, ["miss"]] }).call(env)
+    end
 
-    expect(status).to eq(200)
+    expect(@status).to eq(200)
     expect(
       CasinoClientSessionGuard.configuration.sign_out_store.invalidated?(ticket: "ST-404")
     ).to be(true)
+    expect(events.last.payload).to include(
+      outcome: "intercepted",
+      ticket_count: 1,
+      source: "middleware"
+    )
   end
 
   it "does not swallow unrelated missing POST routes" do

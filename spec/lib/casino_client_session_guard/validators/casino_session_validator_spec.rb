@@ -27,7 +27,15 @@ RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
         )
       )
 
-      expect(validator.valid?).to be(true)
+      events = capture_notifications("validator") { expect(validator.valid?).to be(true) }
+
+      expect(events.last.payload).to include(
+        valid: true,
+        reason: "valid",
+        http_success: true,
+        ticket_present: true,
+        service_url_present: true
+      )
     end
 
     it "returns false when the API returns valid: false" do
@@ -44,7 +52,13 @@ RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
     it "returns false when the API is unavailable" do
       allow(validator.class).to receive(:get).and_raise(SocketError, "Network error")
 
-      expect(validator.valid?).to be(false)
+      events = capture_notifications("validator") { expect(validator.valid?).to be(false) }
+
+      expect(events.last.payload).to include(
+        valid: false,
+        reason: "network_error",
+        error_class: "SocketError"
+      )
     end
 
     it "returns false when the base URL or token is blank" do

@@ -5,9 +5,17 @@ module CasinoClientSessionGuard
     protect_from_forgery with: :null_session
 
     def create
-      return head :not_found unless CasinoClientSessionGuard.configuration.single_logout_enabled
+      unless CasinoClientSessionGuard.configuration.single_logout_enabled
+        instrument_single_logout("disabled", ticket_count: 0)
+        return head :not_found
+      end
 
-      return head :bad_request unless logout_request.invalidate!
+      unless logout_request.invalidate!
+        instrument_single_logout("bad_request", ticket_count: 0)
+        return head :bad_request
+      end
+
+      instrument_single_logout("processed", ticket_count: logout_request.tickets.size)
 
       head :ok
     rescue REXML::ParseException => error
@@ -15,6 +23,7 @@ module CasinoClientSessionGuard
         "[CasinoClientSessionGuard] single logout payload parse failed: " \
         "#{error.class}: #{error.message}"
       )
+      instrument_single_logout("bad_request", ticket_count: 0, error_class: error.class.name)
       head :bad_request
     end
 
@@ -26,6 +35,16 @@ module CasinoClientSessionGuard
         logout_request_param: params[:logoutRequest],
         raw_payload: request.raw_post,
         media_type: request.media_type
+      )
+    end
+
+    def instrument_single_logout(outcome, ticket_count:, error_class: nil)
+      CasinoClientSessionGuard::Observability.instrument(
+        "single_logout",
+        outcome: outcome,
+        ticket_count: ticket_count,
+        error_class: error_class,
+        source: "controller"
       )
     end
   end

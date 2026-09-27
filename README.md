@@ -176,6 +176,40 @@
 
   For a full walkthrough, see [docs/single_logout_flow.md](docs/single_logout_flow.md).
 
+  ## Observability
+
+  The gem now emits `ActiveSupport::Notifications` events so applications can attach metrics, logs, or tracing without monkey-patching gem internals.
+
+  Subscribe like this:
+
+  ```ruby
+  ActiveSupport::Notifications.subscribe(/\.casino_client_session_guard\z/) do |name, start, finish, id, payload|
+    Rails.logger.info(
+      event: name,
+      duration_ms: ((finish - start) * 1000).round,
+      payload: payload
+    )
+  end
+  ```
+
+  Available events:
+
+  - `heartbeat.casino_client_session_guard`
+  - `protectable.casino_client_session_guard`
+  - `validator.casino_client_session_guard`
+  - `single_logout.casino_client_session_guard`
+  - `logout.casino_client_session_guard`
+
+  Common payload fields:
+
+  - `outcome` - High-level result such as `ok`, `unauthorized`, `rejected`, `processed`, or `intercepted`
+  - `reason` - Decision reason such as `validated`, `missing_session`, `ticket_invalidated`, `network_error`
+  - `transport` - Request style when relevant, such as `xhr` or `html`
+  - `ticket_count` - Number of CAS session indexes processed in a single logout notification
+  - `error_class` - Exception class for parse or network failures
+
+  Payloads intentionally avoid raw CAS tickets.
+
   ## Controller Integration
 
   ### Protect a Controller

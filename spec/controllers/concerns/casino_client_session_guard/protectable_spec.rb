@@ -23,10 +23,16 @@ RSpec.describe CasinoClientSessionGuard::Protectable, type: :controller do
     it "returns 401 for Turbo/XHR requests when the user is missing" do
       request.headers["X-Requested-With"] = "XMLHttpRequest"
 
-      get :index
+      events = capture_notifications("protectable") { get :index }
 
       expect(response).to have_http_status(:unauthorized)
       expect(response.headers["X-Session-Expired"]).to eq("true")
+      expect(events.last.payload).to include(
+        outcome: "rejected",
+        reason: "missing_session",
+        transport: "xhr",
+        authenticated: false
+      )
     end
 
     it "strips the ticket param from the redirect target" do
@@ -54,9 +60,14 @@ RSpec.describe CasinoClientSessionGuard::Protectable, type: :controller do
       session[:cas_user] = "admin@example.com"
       session[:cas_authenticated_at] = Time.current + 75.seconds
 
-      get :index
+      events = capture_notifications("protectable") { get :index }
 
       expect(response).to have_http_status(:ok)
+      expect(events.last.payload).to include(
+        outcome: "allowed",
+        reason: "authenticated",
+        authenticated: true
+      )
     end
 
     it "clears the session and redirects when authentication is stale" do
