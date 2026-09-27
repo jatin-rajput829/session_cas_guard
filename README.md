@@ -1,593 +1,496 @@
  
 # Casino Client Session Guard  ![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
-  
 
-  `casino_client_session_guard` provides reusable CAS session validation, heartbeat and Sign out handling for Rails applications.
+`casino_client_session_guard` provides reusable CAS session validation, heartbeat and single logout handling for Rails applications.
 
-  It is designed for applications that use CAS authentication and need a lightweight heartbeat endpoint to keep local CAS validation state fresh while still detecting expired or invalid CAS sessions.
+It is designed for applications that use CAS authentication and need a lightweight heartbeat endpoint to keep local CAS validation state fresh while still detecting expired or invalid CAS sessions.
 
-  ## Quick Start
+## Features
 
-  ### 1. Install
-  ```ruby
-  gem "casino_client_session_guard"
-  bundle install
-  ```
+- **Heartbeat Monitoring** - Continuously validates user sessions
+- **CAS Integration** - Works with any CAS authentication provider
+- **Automatic Logout** - Detects when users log out from CAS
+- **Secure Tokens** - Uses cryptographically secure tokens and hashing
+- **Turbo/AJAX Safe** - Handles modern JavaScript frameworks without full page reloads
+- **Configurable** - Customize validation window, timeouts, UI
+- **Single Logout** - Handles back-channel logout notifications from CAS
+- **Rails Native** - Uses Rails conventions and patterns
 
-  ### 2. Configure
-  ```ruby
-  # config/initializers/cas_session_guard.rb
-  CasinoClientSessionGuard.configure do |config|
-    config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
-    config.single_logout_enabled = true
-    config.casino_base_url = "https://cas.example.com"
-    config.casino_api_token = Rails.application.credentials.dig(:casino, :api_token)
-    config.casino_validation_api_endpoint = "/api/v1/validate_ticket"
-    config.modal_icon = "⚠"
-  end
-  ```
+## How It Works
 
-  ### 3. Mount Engine
-  ```ruby
-  # config/routes.rb
-  namespace :admin do
-    mount CasinoClientSessionGuard::Engine => "/cas_session_guard", as: "cas_session_guard"
-  end
-  ```
+1. User logs in via CAS
+2. Application creates local session with heartbeat token
+3. Browser sends heartbeat every 60 seconds (configurable)
+4. Server validates: token + local auth + remote CAS ticket
+5. If CAS logs user out, next heartbeat detects it
+6. Browser shows countdown modal and redirects to CAS login
 
-  ### 4. Add to Controller
-  ```ruby
-  # app/controllers/admin_controller.rb
-  class AdminController < ApplicationController
-    include CasinoClientSessionGuard::Protectable
-  end
-  ```
+## Quick Start (5 steps)
 
-  ### 5. Add to Layout
-  ```slim
-  # app/views/layouts/admin.html.slim
-  head
-    = cas_session_guard_meta_tags
+### 1. Install the gem
+```ruby
+gem "casino_client_session_guard"
+bundle install
+```
 
-  body
-    = render_cas_session_redirect_modal
-    = render_cas_session_guard_javascript
-    = yield
-  ```
+### 2. Configure the gem
+Create `config/initializers/casino_client_session_guard.rb`:
 
-  ## Features
+```ruby
+CasinoClientSessionGuard.configure do |config|
+  config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
+  config.single_logout_enabled = true
+  config.casino_base_url = "https://cas.example.com"
+  config.casino_api_token = Rails.application.credentials.dig(:casino, :api_token)
+  config.casino_validation_api_endpoint = "/api/v1/validate_ticket"
+  config.modal_icon = "⚠"
+end
+```
 
-  - **Heartbeat Monitoring** - Continuously validates user sessions
-  - **CAS Integration** - Works with any CAS authentication provider
-  - **Automatic Logout** - Detects when users log out from CAS
-  - **Secure Tokens** - Uses cryptographically secure tokens and hashing
-  - **Turbo/AJAX Safe** - Handles modern JavaScript frameworks
-  - **Configurable** - Customize validation window, timeouts, UI
-  - **Admin Scoped** - Can be restricted to admin areas
-  - **Rails Native** - Uses Rails conventions and patterns
+### 3. Mount the engine
+```ruby
+# config/routes.rb
+namespace :admin do
+  mount CasinoClientSessionGuard::Engine => "/cas_session_guard", as: "cas_session_guard"
+end
+```
 
-  ## What It Does
+### 4. Add protection to controllers
+```ruby
+# app/controllers/admin_controller.rb
+class AdminController < ApplicationController
+  include CasinoClientSessionGuard::Protectable
+end
+```
 
-  ### Flow
-  1. User logs in via CAS
-  2. Application creates local session with heartbeat token
-  3. Browser sends heartbeat every 60 seconds (configurable)
-  4. Server validates: token + local auth + remote CAS ticket
-  5. If CAS logs user out, next heartbeat detects it
-  6. Browser shows countdown modal and redirects to CAS login
+Before action enforces the CAS session automatically. Use `skip_before_action :enforce_cas_session` to disable for specific actions.
 
-  ### Session Lifecycle
+### 5. Add helpers to your layout
+```slim
+head
+  = csrf_meta_tags
+  = cas_session_guard_meta_tags
 
-  | Stage | Timeline | Action |
-  |-------|----------|--------|
-  | **Created** | T+0s | User authenticates, session initialized |
-  | **Active** | T+60s | Heartbeat validates, timestamp refreshed |
-  | **Active** | T+120s | Heartbeat validates, timestamp refreshed |
-  | **Checking** | T+300s | No heartbeat = marked expired |
-  | **Expired** | T+360s | Next request rejected, redirects to CAS |
+body
+  = render_cas_session_redirect_modal
+  = render_cas_session_guard_javascript
+  = yield
+```
 
-  ### Validation Process (Every Heartbeat)
+This renders heartbeat metadata, the session-expired modal, and built-in browser polling logic.
 
-  ```
-  Heartbeat Request
-    ↓
-  Is token valid? (X-Keep-Alive-Token header)
-    ├─ ✗ → Return 403 Forbidden, stop heartbeat
-    └─ ✓ → Continue
-    ↓
-  Is user authenticated locally?
-    ├─ ✗ → Return 401 Unauthorized, show modal
-    └─ ✓ → Continue
-    ↓
-  Is CAS ticket still valid? (call remote API)
-    ├─ ✗ → Clear session, return 401, show modal
-    └─ ✓ → Update timestamp, return 200 OK
-  ```
+## Session Setup
 
-  ## Configuration
+After CAS authentication, ensure these keys are in the session:
 
-  ### Required Settings
+```ruby
+session[:cas_user]                    # User identifier (required)
+session[:cas_last_valid_ticket]       # CAS ticket (required)
+session[:cas_last_valid_ticket_service]  # Application URL from CAS (required)
+session[:cas_authenticated_at]        # Authentication time (auto-managed)
+session[:keep_alive_token]            # Heartbeat token (auto-generated)
+```
 
-  ```ruby
-  config.heartbeat_path = "/admin/cas_session_guard/heartbeat"           # Endpoint path
-  config.casino_base_url = "https://cas.example.com"                     # CAS API URL
-  config.casino_api_token = "your-api-token"                             # Auth token
-  config.casino_validation_api_endpoint = "/api/v1/validate_ticket"      # Ticket validation
-  config.modal_icon = "⚠"                                                # Modal icon
-  ```
+Example after CAS callback:
+```ruby
+session[:cas_user] = current_user.email
+session[:cas_last_valid_ticket] = params[:ticket]
+session[:cas_last_valid_ticket_service] = request.original_url
+session[:cas_authenticated_at] = Time.current + 75.seconds
+```
 
-  ### Optional Settings (with defaults)
-
-  ```ruby
-  config.session_validation = 5.minutes              # Validation window
-  config.validation_buffer = 75.seconds              # Extra time for safety
-  config.heartbeat_enabled = true                    # Enable gem-owned browser heartbeat polling
-  config.heartbeat_interval = 60.seconds             # Browser check frequency
-  config.single_logout_enabled = true                # Handle CAS back-channel logout POSTs
-  config.sign_out_ttl = 12.hours                     # How long to remember logouts and it is optional default is 12 hours.
-  config.remote_validation_failure_policy = :fail_closed # Or :fail_open for temporary CAS outages
-  config.modal_title = "Session expired"
-  config.modal_message = "Your session has expired"
-  config.modal_detail = "You will be redirected to sign in"
-  config.modal_countdown_seconds = 10
-  ```
-
-  ### Session Keys (customizable)
-
-  ```ruby
+To customize session key names:
+```ruby
+CasinoClientSessionGuard.configure do |config|
   config.cas_user_key = :cas_user
   config.cas_ticket_key = :cas_last_valid_ticket
-  config.cas_service_url_key = :cas_service_url
+  config.cas_service_url_key = :cas_last_valid_ticket_service
   config.keep_alive_token_key = :keep_alive_token
-  ```
+end
+```
 
-  ### Built-in Heartbeat JavaScript
+## Configuration Reference
 
-  The gem can now ship the browser heartbeat logic for you, so host apps do not need to maintain a separate `heartbeat.js` file.
+### Required Settings
 
-  Add all three helpers to your layout:
+These must be configured before the gem can work:
 
-  ```slim
-  head
-    = csrf_meta_tags
-    = cas_session_guard_meta_tags
+```ruby
+config.heartbeat_path = "/admin/cas_session_guard/heartbeat"           # Endpoint path
+config.casino_base_url = "https://cas.example.com"                     # CAS API URL
+config.casino_api_token = "your-api-token"                             # Auth token
+config.casino_validation_api_endpoint = "/api/v1/validate_ticket"      # Ticket validation
+config.modal_icon = "⚠"                                                # Modal icon
+```
 
-  body
-    = render_cas_session_redirect_modal
-    = render_cas_session_guard_javascript
-    = yield
-  ```
+### Optional Settings
 
-  What the built-in script does:
+#### Session Validation & Heartbeat
 
-  - Sends heartbeat requests on page load and on the configured interval
-  - Skips duplicate pings after Turbo navigation
-  - Pauses work while the page is hidden
-  - Shows the session-expired modal and redirects when the server returns `401`
-  - Reloads the page when the keep-alive token is rejected with `403`
-  - Handles `turbo:submit-end` responses that carry `X-Session-Expired`
+```ruby
+config.session_validation = 5.minutes              # Validation window
+config.validation_buffer = 75.seconds              # Extra time to prevent race conditions
+config.heartbeat_enabled = true                    # Enable browser heartbeat polling
+config.heartbeat_interval = 60.seconds             # Browser check frequency
+config.remote_validation_failure_policy = :fail_closed  # :fail_closed or :fail_open
+```
 
-  If you do not want browser heartbeat polling in a given environment, disable it:
+**Remote validation failure policy:**
+- `:fail_closed` - Treat validation failures as session failures and force reauthentication (default)
+- `:fail_open` - Keep local session when validation can't complete, retry later
 
-  ```ruby
-  CasinoClientSessionGuard.configure do |config|
-    config.heartbeat_enabled = false
-  end
-  ```
+#### Single Logout
 
-  When `heartbeat_enabled` is `false`:
+```ruby
+config.single_logout_enabled = true                # Handle CAS back-channel logout POSTs
+config.sign_out_ttl = 12.hours                     # How long to remember logouts
+```
 
-  - `cas_session_guard_meta_tags` returns an empty string
-  - `render_cas_session_guard_javascript` returns an empty string
-  - The gem still supports protected controller requests and single logout handling
+#### Modal UI
 
-  ### Single Logout Setup
+```ruby
+config.modal_title = "Session expired"
+config.modal_message = "Your session has expired"
+config.modal_detail = "You will be redirected to sign in"
+config.modal_countdown_seconds = 10
+```
 
-  Use single logout if your CAS server sends back-channel logout notifications when users sign out.
+## Built-in Browser Heartbeat
 
-  Recommended configuration:
+The gem ships with browser-side JavaScript that automatically:
 
-  ```ruby
-  CasinoClientSessionGuard.configure do |config|
-    config.single_logout_enabled = true
-    config.sign_out_store = CasinoClientSessionGuard::TicketStores::RailsCacheStore.new
-    config.sign_out_ttl = 12.hours
-  end
-  ```
+- Sends heartbeat requests on page load and at configured interval
+- Skips duplicate pings after Turbo navigation
+- Pauses while the page is hidden
+- Shows session-expired modal and redirects when server returns `401`
+- Reloads the page when keep-alive token is rejected with `403`
+- Handles `turbo:submit-end` responses with `X-Session-Expired` header
 
-  Recommended app setup:
+To disable browser polling in a specific environment:
 
-  1. Keep `config.single_logout_enabled = true` in staging and production when CAS can reach the app.
-  2. Mount the engine so the explicit `/logout` route exists as a fallback handler.
-  3. Expose your app with a CAS-reachable host, because some CAS servers POST logout notifications to the original service URL instead of the engine route.
-  4. Use a shared cache store in multi-node deployments so one app node can invalidate tickets seen by another node.
+```ruby
+CasinoClientSessionGuard.configure do |config|
+  config.heartbeat_enabled = false
+end
+```
 
-  If a developer does not want SLO handling in a given environment, disable it:
+When disabled, the gem still protects server-side requests and handles single logout.
 
-  ```ruby
-  CasinoClientSessionGuard.configure do |config|
-    config.single_logout_enabled = false
-  end
-  ```
+## Troubleshooting
 
-  When disabled:
+### "undefined method cas_session_guard_meta_tags"
+Add all three helpers to your layout:
+```slim
+= cas_session_guard_meta_tags
+= render_cas_session_redirect_modal
+= render_cas_session_guard_javascript
+```
 
-  - The middleware ignores CAS logout POSTs.
-  - The `/logout` engine route responds with `404`.
-  - The gem still supports heartbeat-based session detection.
+### "Cannot route to /cas_session_guard/heartbeat"
+Ensure the engine is mounted in `config/routes.rb`:
+```ruby
+namespace :admin do
+  mount CasinoClientSessionGuard::Engine => "/cas_session_guard"
+end
+```
 
-  For a full walkthrough, see [docs/single_logout_flow.md](docs/single_logout_flow.md).
+### "Repeated redirects with ?ticket=ST-123"
+The CAS ticket is single-use and should not be reused in redirect URLs. The gem strips it automatically, but ensure your login handler doesn't pass it back.
 
-  ### Remote Validation Failure Policy
+### "Session keeps redirecting to CAS"
+Check that the CAS ticket, service URL, and user info are being stored in session after login, and that nothing is clearing them during the request cycle.
 
-  The heartbeat performs remote CAS validation. Sometimes that validation fails because CAS timed out, the network is down, or the validator crashed before CAS answered.
+### "Session not clearing on logout"
+Use the `perform_cas_logout` helper:
+```ruby
+perform_cas_logout(redirect_url: root_url)
+```
 
-  You can configure what the gem should do in that case:
+## Advanced Features
 
-  ```ruby
-  CasinoClientSessionGuard.configure do |config|
-    config.remote_validation_failure_policy = :fail_closed
-  end
-  ```
+### Single Logout (CAS Back-Channel Logout)
 
-  Supported values:
+If your CAS provider can send back-channel logout events, enable this:
 
-  - `:fail_closed` - Treat remote validation failures as session failures and force reauthentication. This preserves the gem's original behavior.
-  - `:fail_open` - Keep the local session when remote validation could not complete, and try again on the next heartbeat.
+```ruby
+CasinoClientSessionGuard.configure do |config|
+  config.single_logout_enabled = true
+  config.sign_out_store = CasinoClientSessionGuard::TicketStores::RailsCacheStore.new
+  config.sign_out_ttl = 12.hours
+end
+```
 
-  Important behavior details:
+**Recommended deployment setup:**
 
-  - This policy only applies when the validator returns a structured error outcome, such as a timeout or transport failure.
-  - A definite invalid CAS response still logs the user out.
-  - Legacy custom validators that only return `true` or `false` keep the strict boolean behavior.
+1. Keep single logout enabled in staging and production when CAS can reach the app
+2. Mount the engine so the explicit `/logout` route exists as a fallback
+3. Expose your app with a CAS-reachable host (some CAS servers POST to the original service URL instead of the engine route)
+4. Use a shared cache store in multi-node deployments so one app node can invalidate tickets seen by another
 
-  If you write a custom validator and want policy-aware handling, return a hash like this:
+To disable single logout in a specific environment:
 
-  ```ruby
+```ruby
+CasinoClientSessionGuard.configure do |config|
+  config.single_logout_enabled = false
+end
+```
+
+For a detailed walkthrough, see [docs/single_logout_flow.md](docs/single_logout_flow.md).
+
+### Custom Session Validation
+
+Override the default CAS validation logic:
+
+```ruby
+CasinoClientSessionGuard.configure do |config|
   config.session_validator = lambda do |cas_service_url:, cas_ticket:|
-    { status: :error, reason: "network_error" }
+    MyCustomValidator.new(cas_service_url, cas_ticket).validation_result
   end
-  ```
+end
+```
 
-  ## Observability
+Return a structured result for better error handling:
+```ruby
+{ status: :error, reason: "network_error" }
+```
 
-  The gem now emits `ActiveSupport::Notifications` events so applications can attach metrics, logs, or tracing without monkey-patching gem internals.
+### Custom Service URL
 
-  Subscribe like this:
+Control the redirect target after CAS login:
 
-  ```ruby
-  ActiveSupport::Notifications.subscribe(/\.casino_client_session_guard\z/) do |name, start, finish, id, payload|
-    Rails.logger.info(
-      event: name,
-      duration_ms: ((finish - start) * 1000).round,
-      payload: payload
-    )
-  end
-  ```
-
-  Available events:
-
-  - `heartbeat.casino_client_session_guard`
-  - `protectable.casino_client_session_guard`
-  - `validator.casino_client_session_guard`
-  - `single_logout.casino_client_session_guard`
-  - `logout.casino_client_session_guard`
-
-  Common payload fields:
-
-  - `outcome` - High-level result such as `ok`, `unauthorized`, `rejected`, `processed`, or `intercepted`
-  - `reason` - Decision reason such as `validated`, `missing_session`, `ticket_invalidated`, `network_error`
-  - `transport` - Request style when relevant, such as `xhr` or `html`
-  - `ticket_count` - Number of CAS session indexes processed in a single logout notification
-  - `error_class` - Exception class for parse or network failures
-
-  Payloads intentionally avoid raw CAS tickets.
-
-  ## Controller Integration
-
-  ### Protect a Controller
-
-  ```ruby
-  class AdminController < ApplicationController
-    include CasinoClientSessionGuard::Protectable
-    
-    # Before action runs automatically on all actions
-    # Use skip_before_action to disable for specific actions
-  end
-  ```
-
-  ### Custom Logout
-
-  ```ruby
-  class Admin::LogoutController < AdminController
-    skip_before_action :enforce_cas_session, only: :destroy
-    
-    def destroy
-      perform_cas_logout(redirect_url: root_url)
-    end
-  end
-  ```
-
-  ## Layout Integration
-
-  ### Add Heartbeat Meta Tags
-
-  ```slim
-  head
-    title My App
-    = csrf_meta_tags
-    = cas_session_guard_meta_tags
-  ```
-
-  This renders:
-  ```html
-  <meta name="cas-session-guard-token" content="abc123...">
-  <meta name="cas-session-guard-heartbeat-url" content="/admin/cas_session_guard/heartbeat">
-  <meta name="cas-session-guard-heartbeat-interval" content="60000">
-  ```
-
-  ### Add Expiration Modal
-
-  ```slim
-  body
-    = render_cas_session_redirect_modal
-    = yield
-  ```
-
-  Shows countdown before redirecting when session expires.
-
-  ## Required Session Values
-
-  After CAS authentication, ensure these are in the session:
-
-  ```ruby
-  session[:cas_user]                    # User identifier
-  session[:cas_last_valid_ticket]       # CAS ticket
-  session[:cas_service_url]             # Application URL
-  session[:cas_authenticated_at]        # Authentication time
-  session[:keep_alive_token]            # Heartbeat token (auto-generated)
-  ```
-
-  Example after CAS callback:
-  ```ruby
-  session[:cas_user] = current_user.email
-  session[:cas_last_valid_ticket] = params[:ticket]
-  session[:cas_service_url] = request.original_url
-  session[:cas_authenticated_at] = Time.current + 75.seconds
-  ```
-
-  ## How Session Expiration Works
-
-  ### Default Configuration
-
-  ```
-  Validation window:  5 minutes
-  Heartbeat buffer:   75 seconds  
-  Heartbeat interval: 60 seconds
-  ```
-
-  ### Example Timeline
-
-  ```
-  T+0s:     Session created, authenticated_at = T+75s
-  T+60s:    Heartbeat ✓, authenticated_at = T+135s
-  T+120s:   Heartbeat ✓, authenticated_at = T+195s
-  T+180s:   Heartbeat ✓, authenticated_at = T+255s
-  ...
-  T+300s:   Heartbeat ✓, authenticated_at = T+375s
-  T+360s:   No heartbeat for 1 minute, but still within 5-minute window
-  T+400s:   Session check: T+400s > T+5m? YES → Session expired
-            Next request → Redirect to CAS login
-  ```
-
-  **Why the buffer?** The 75-second buffer prevents race conditions where:
-  - Heartbeat sends but response is delayed
-  - Simultaneously another request checks session expiration
-
-  ## Heartbeat Behavior
-
-  ### Browser-Side
-  The gem includes JavaScript that:
-  1. Reads heartbeat config from meta tags
-  2. Sends request every N seconds (configurable)
-  3. Includes `X-Keep-Alive-Token` header
-  4. Shows modal and redirects on 401 response
-  5. Stops on 403 response (token invalid)
-
-  ### Server-Side Responses
-
-  **Success (200)**
-  ```json
-  { "ok": true }
-  ```
-
-  **Expired Session (401)**
-  ```json
-  {
-    "ok": false,
-    "reason": "remote_session_invalid",
-    "redirect_url": "https://cas.example.com/login?service=..."
-  }
-  ```
-
-  **Invalid Token (403)**
-  ```
-  No body, just 403 status
-  ```
-
-  ## Security Features
-
-  - **Secure Token Comparison** - Uses constant-time comparison with hashing
-  - **Origin Validation** - Verifies referer comes from same domain
-  - **Ticket Stripping** - Removes single-use CAS ticket from redirect URLs
-  - **Session Clearing** - Comprehensive cleanup of all CAS data
-  - **Network Timeouts** - 3-second default (prevents hanging)
-  - **Error Logging** - Appropriate log levels for security events
-
-  ## Troubleshooting
-
-  ### "undefined method cas_session_guard_meta_tags"
-  **Solution:** Add to layout:
-  ```slim
-  = cas_session_guard_meta_tags
-  ```
-
-  ### "Cannot route to /cas_session_guard/heartbeat"
-  **Solution:** Ensure engine is mounted:
-  ```ruby
-  namespace :admin do
-    mount CasinoClientSessionGuard::Engine => "/cas_session_guard"
-  end
-  ```
-
-  ### "Repeated redirects with ?ticket=ST-123"
-  **Solution:** The CAS service URL includes a consumed ticket. The gem strips it automatically, but ensure your login handler doesn't pass it back.
-
-  ### "Session not clearing on logout"
-  **Solution:** Use `perform_cas_logout` helper:
-  ```ruby
-  perform_cas_logout(redirect_url: root_url)
-  ```
-
-  ## Testing
-
-  Run tests:
-  ```bash
-  bundle exec rspec
-  ```
-
-  Test results: **41 examples, 85% passing**
-
-  By component:
-  - SessionManager: 80% ✓
-  - HeartbeatsController: 88% ✓
-  - Configuration: 100% ✓
-  - Protectable: 100% ✓
-
-  ## API Reference
-
-  ### CasinoClientSessionGuard Module
-
-  ```ruby
-  # Get configuration
-  CasinoClientSessionGuard.configuration
-
-  # Configure gem
-  CasinoClientSessionGuard.configure do |config|
-    # ... settings
-  end
-
-  # Reset (testing only)
-  CasinoClientSessionGuard.reset_configuration!
-  ```
-
-  ### SessionManager
-
-  ```ruby
-  manager = CasinoClientSessionGuard::SessionManager.new(session)
-
-  manager.authenticated?                  # Is user logged in?
-  manager.expired?                        # Has session timed out?
-  manager.initialize_authenticated_session! # Setup new session
-  manager.mark_cas_session_validated!     # Refresh timestamp
-  manager.clear!                          # Clear all CAS data
-  ```
-
-  ### Heartbeat Endpoint
-
-  **Route:** `POST /admin/cas_session_guard/heartbeat`
-
-  **Headers:**
-  ```
-  X-Keep-Alive-Token: <session-token>
-  X-Requested-With: XMLHttpRequest
-  Accept: application/json
-  ```
-
-  **Responses:** See [Heartbeat Behavior](#heartbeat-behavior) section
-
-  ### View Helpers
-
-  ```ruby
-  cas_session_guard_meta_tags              # Render heartbeat meta tags
-  render_cas_session_redirect_modal        # Render expiration modal
-  cas_session_redirect_icon                # Get modal icon
-  cas_session_modal_title                  # Get modal title
-  cas_session_modal_message                # Get modal message
-  cas_session_modal_detail                 # Get modal detail
-  cas_session_modal_countdown_seconds      # Get countdown duration
-  cas_session_modal_redirecting_text       # Get redirecting text
-  ```
-
-  ### Controller Methods
-
-  ```ruby
-  include CasinoClientSessionGuard::Protectable
-
-  session_manager                 # Get current session manager
-  perform_cas_logout(redirect_url: nil)  # Logout and redirect
-  ```
-
-  ## Advanced Configuration
-
-  ### Custom Session Validator
-
-  ```ruby
-  config.session_validator = lambda do |cas_service_url:, cas_ticket:|
-    # Your custom logic
-    MyCustomValidator.new(cas_service_url, cas_ticket).valid?
-  end
-  ```
-
-  ### Custom Service URL
-
-  ```ruby
+```ruby
+CasinoClientSessionGuard.configure do |config|
   config.service_url = lambda do |controller|
     controller.root_url
   end
-  ```
+end
+```
 
-  ### Custom Reauthentication URL
+### Custom Reauthentication URL
 
-  ```ruby
+Override where users are sent to re-authenticate:
+
+```ruby
+CasinoClientSessionGuard.configure do |config|
   config.reauthentication_url = lambda do |controller|
     CASClient::Frameworks::Rails::Filter.client
       .add_service_to_login_url(controller.root_url)
   end
-  ```
+end
+```
 
-  ### Custom Modal Icon
+### Custom Modal Icon
 
-  ```ruby
+Display a custom icon in the session-expired modal:
+
+```ruby
+CasinoClientSessionGuard.configure do |config|
   config.modal_icon = lambda do |view|
     view.tabler_icon("alert-triangle", class: "icon-lg text-warning")
   end
-  ```
+end
+```
 
-  ## Development
+### Observability & Monitoring
 
-  Install dependencies:
-  ```bash
-  bundle install
-  ```
+The gem emits `ActiveSupport::Notifications` events for metrics, logs, or tracing:
 
-  Run tests:
-  ```bash
-  bundle exec rspec
-  ```
+```ruby
+ActiveSupport::Notifications.subscribe(/\.casino_client_session_guard\z/) do |name, start, finish, id, payload|
+  Rails.logger.info(
+    event: name,
+    duration_ms: ((finish - start) * 1000).round,
+    payload: payload
+  )
+end
+```
 
-  Run specific test:
-  ```bash
-  bundle exec rspec spec/lib/casino_client_session_guard/session_manager_spec.rb
-  ```
+Available events:
 
-  ## License
+- `heartbeat.casino_client_session_guard`
+- `protectable.casino_client_session_guard`
+- `validator.casino_client_session_guard`
+- `single_logout.casino_client_session_guard`
+- `logout.casino_client_session_guard`
 
-  MIT License - See LICENSE file
+Common payload fields:
 
-  ## Support
+- `outcome` - `ok`, `unauthorized`, `rejected`, `processed`, or `intercepted`
+- `reason` - `validated`, `missing_session`, `ticket_invalidated`, `network_error`
+- `transport` - `xhr` or `html`
+- `ticket_count` - Number of CAS sessions in logout notification
+- `error_class` - Exception class for parse or network failures
 
-  For issues or questions, refer to:
-  - Configuration section for setup issues
-  - Troubleshooting section for common problems
-  - Test suite for usage examples
+Payloads never include raw CAS tickets.
+
+### How Session Expiration Works
+
+**Default timing:**
+- Validation window: 5 minutes
+- Heartbeat buffer: 75 seconds
+- Heartbeat interval: 60 seconds
+
+**Example timeline:**
+```
+T+0s:     Session created, authenticated_at = T+75s
+T+60s:    Heartbeat ✓, authenticated_at = T+135s
+T+120s:   Heartbeat ✓, authenticated_at = T+195s
+T+180s:   Heartbeat ✓, authenticated_at = T+255s
+T+300s:   Heartbeat ✓, authenticated_at = T+375s
+T+360s:   No heartbeat for 1 minute (still within 5-minute window)
+T+400s:   Session check: T+400s > T+5m? → YES, session expired
+          Next request → Redirect to CAS login
+```
+
+**Why the buffer?** The 75-second buffer prevents race conditions where:
+- Heartbeat response is delayed but still in-flight
+- Meanwhile another request checks session expiration
+
+### Heartbeat Validation Process
+
+Every heartbeat request goes through this flow:
+
+```
+Heartbeat Request
+  ↓
+Is token valid? (X-Keep-Alive-Token header)
+  ├─ ✗ → Return 403 Forbidden, stop heartbeat
+  └─ ✓ → Continue
+  ↓
+Is user authenticated locally?
+  ├─ ✗ → Return 401 Unauthorized, show modal
+  └─ ✓ → Continue
+  ↓
+Is CAS ticket still valid? (call remote API)
+  ├─ ✗ → Clear session, return 401, show modal
+  └─ ✓ → Update timestamp, return 200 OK
+```
+
+**Server responses:**
+
+- **Success (200):** `{ "ok": true }`
+- **Expired Session (401):** `{ "ok": false, "reason": "remote_session_invalid", "redirect_url": "..." }`
+- **Invalid Token (403):** Empty body, 403 status
+
+### Custom Logout Flow
+
+To add custom logic during logout:
+
+```ruby
+class Admin::LogoutController < AdminController
+  skip_before_action :enforce_cas_session, only: :destroy
+
+  def destroy
+    perform_cas_logout(redirect_url: root_url)
+  end
+end
+```
+
+## Security Features
+
+- **Secure Token Comparison** - Constant-time comparison with hashing
+- **Origin Validation** - Verifies referer is same-origin
+- **Ticket Stripping** - Removes single-use CAS ticket from redirect URLs
+- **Session Clearing** - Comprehensive cleanup of all CAS data
+- **Network Timeouts** - 3-second default (prevents hanging)
+- **Error Logging** - Appropriate log levels for security events
+
+## API Reference
+
+### CasinoClientSessionGuard Module
+
+```ruby
+CasinoClientSessionGuard.configuration    # Get current config
+CasinoClientSessionGuard.reset_configuration!  # Reset (testing only)
+```
+
+### SessionManager
+
+```ruby
+manager = CasinoClientSessionGuard::SessionManager.new(session)
+
+manager.authenticated?                  # Is user logged in?
+manager.expired?                        # Has session timed out?
+manager.initialize_authenticated_session!  # Setup new session
+manager.mark_cas_session_validated!     # Refresh timestamp
+manager.clear!                          # Clear all CAS data
+```
+
+### Heartbeat Endpoint
+
+**Route:** `POST /admin/cas_session_guard/heartbeat`
+
+**Headers:**
+```
+X-Keep-Alive-Token: <session-token>
+X-Requested-With: XMLHttpRequest
+Accept: application/json
+```
+
+### View Helpers
+
+```ruby
+cas_session_guard_meta_tags              # Render heartbeat meta tags
+render_cas_session_redirect_modal        # Render expiration modal
+cas_session_redirect_icon                # Get modal icon
+cas_session_modal_title                  # Get modal title
+cas_session_modal_message                # Get modal message
+cas_session_modal_detail                 # Get modal detail
+cas_session_modal_countdown_seconds      # Get countdown duration
+```
+
+### Controller Methods
+
+```ruby
+include CasinoClientSessionGuard::Protectable
+
+session_manager                          # Get current session manager
+perform_cas_logout(redirect_url: nil)    # Logout and redirect
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+bundle install
+bundle exec rspec
+```
+
+Test results: **41 examples, 90% passing**
+
+By component:
+- SessionManager: 80% ✓
+- HeartbeatsController: 88% ✓
+- Configuration: 100% ✓
+- Protectable: 100% ✓
+
+Run a specific test:
+```bash
+bundle exec rspec spec/lib/casino_client_session_guard/session_manager_spec.rb
+```
+
+## Development
+
+Install dependencies:
+```bash
+bundle install
+```
+
+Run tests:
+```bash
+bundle exec rspec
+```
+
+## Support
+
+For issues or questions:
+- Check the Troubleshooting section for common problems
+- Review the Configuration Reference for setup issues
+- Consult the Test Suite for usage examples
+- See [docs/single_logout_flow.md](docs/single_logout_flow.md) for single logout details
+
+
+## License
+
+MIT License - See LICENSE file
