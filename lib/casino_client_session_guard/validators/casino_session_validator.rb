@@ -9,6 +9,12 @@ module CasinoClientSessionGuard
     class CasinoSessionValidator
       include HTTParty
 
+      # Structured results let callers distinguish between an invalid CAS ticket
+      # and a temporary validation failure such as a timeout or connection error.
+      VALID_RESULT = :valid
+      INVALID_RESULT = :invalid
+      ERROR_RESULT = :error
+
       # Parse responses as JSON by default
       format :json
 
@@ -26,13 +32,13 @@ module CasinoClientSessionGuard
         @casino_validation_api_endpoint = configuration.casino_validation_api_endpoint.to_s.sub(/^\//, "")
       end
 
-      # Validates the CAS ticket by calling the CAS provider API.
-      # Returns true if the ticket is valid, false otherwise or if validation fails.
-      def valid?
+      # Validates the CAS ticket by calling the CAS provider API and returns a structured result.
+      # The heartbeat controller uses this extra detail to apply the configured fail-open/fail-closed policy.
+      def validation_result
         # Ticket or service URL missing - cannot validate
         if @cas_service_url.blank? || @base_url.blank? || @api_token.blank?
-          instrument_validator(false, reason: "missing_configuration")
-          return false
+          instrument_validator(false, reason: "missing_configuration", status: INVALID_RESULT)
+          return invalid_result(reason: "missing_configuration")
         end
 
         # Make HTTP request to CAS provider API with authentication token
@@ -50,30 +56,39 @@ module CasinoClientSessionGuard
 
         # Check if request was successful and validation returned true
         unless response.success?
-          instrument_validator(false, reason: "http_failure", http_success: false)
-          return false
+          instrument_validator(false, reason: "http_failure", http_success: false, status: ERROR_RESULT)
+          return error_result(reason: "http_failure")
         end
 
         valid = response.parsed_response&.dig('valid') == true
-        instrument_validator(valid, reason: valid ? "valid" : "invalid", http_success: true)
-        valid
+        reason = valid ? "valid" : "invalid"
+        status = valid ? VALID_RESULT : INVALID_RESULT
+
+        instrument_validator(valid, reason: reason, http_success: true, status: status)
+        result_payload(status: status, reason: reason)
       rescue HTTParty::Error, Net::OpenTimeout, Net::ReadTimeout, SocketError => e
-        # Network errors are recoverable - log as warning and fail open (session remains valid)
-        # This prevents network issues from prematurely invalidating sessions
+        # Transport failures mean CAS never answered. The configured failure policy,
+        # not the validator itself, decides whether that should end the local session.
         Rails.logger.warn(
           "[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: " \
           "#{e.class} - #{e.message}"
         )
-        instrument_validator(false, reason: "network_error", error_class: e.class.name)
-        false
+        instrument_validator(false, reason: "network_error", error_class: e.class.name, status: ERROR_RESULT)
+        error_result(reason: "network_error", error_class: e.class.name)
       rescue StandardError => e
         # Unexpected errors - log full details for investigation
         Rails.logger.error(
           "[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Unexpected failure: " \
           "#{e.class} - #{e.message}\n#{e.backtrace&.first(3)&.join("\n")}"
         )
-        instrument_validator(false, reason: "unexpected_error", error_class: e.class.name)
-        false
+        instrument_validator(false, reason: "unexpected_error", error_class: e.class.name, status: ERROR_RESULT)
+        error_result(reason: "unexpected_error", error_class: e.class.name)
+      end
+
+      # Preserve the simple boolean API for callers that do not care about policy-aware outcomes.
+      # Any non-valid result remains false here.
+      def valid?
+        validation_result[:status] == VALID_RESULT
       end
 
       private
@@ -82,10 +97,27 @@ module CasinoClientSessionGuard
         CasinoClientSessionGuard.configuration
       end
 
-      def instrument_validator(valid, reason:, http_success: nil, error_class: nil)
+      def result_payload(status:, reason:, error_class: nil)
+        {
+          status: status,
+          reason: reason,
+          error_class: error_class
+        }
+      end
+
+      def invalid_result(reason:)
+        result_payload(status: INVALID_RESULT, reason: reason)
+      end
+
+      def error_result(reason:, error_class: nil)
+        result_payload(status: ERROR_RESULT, reason: reason, error_class: error_class)
+      end
+
+      def instrument_validator(valid, reason:, status:, http_success: nil, error_class: nil)
         CasinoClientSessionGuard::Observability.instrument(
           "validator",
           valid: valid,
+          status: status,
           reason: reason,
           http_success: http_success,
           error_class: error_class,

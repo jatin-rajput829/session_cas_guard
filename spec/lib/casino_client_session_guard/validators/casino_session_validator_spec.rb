@@ -19,6 +19,20 @@ RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
   end
 
   describe "#valid?" do
+    it "returns a structured valid result when the remote validator says the ticket is valid" do
+      allow(validator.class).to receive(:get).and_return(
+        double(
+          success?: true,
+          parsed_response: { "valid" => true }
+        )
+      )
+
+      expect(validator.validation_result).to include(
+        status: :valid,
+        reason: "valid"
+      )
+    end
+
     it "returns true when the remote validator says the ticket is valid" do
       allow(validator.class).to receive(:get).and_return(
         double(
@@ -31,6 +45,7 @@ RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
 
       expect(events.last.payload).to include(
         valid: true,
+        status: :valid,
         reason: "valid",
         http_success: true,
         ticket_present: true,
@@ -56,6 +71,17 @@ RSpec.describe CasinoClientSessionGuard::Validators::CasinoSessionValidator do
 
       expect(events.last.payload).to include(
         valid: false,
+        status: :error,
+        reason: "network_error",
+        error_class: "SocketError"
+      )
+    end
+
+    it "returns a structured error result when the API is unavailable" do
+      allow(validator.class).to receive(:get).and_raise(SocketError, "Network error")
+
+      expect(validator.validation_result).to include(
+        status: :error,
         reason: "network_error",
         error_class: "SocketError"
       )

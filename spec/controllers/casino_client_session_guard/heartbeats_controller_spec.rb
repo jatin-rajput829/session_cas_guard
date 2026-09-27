@@ -81,6 +81,38 @@ RSpec.describe CasinoClientSessionGuard::HeartbeatsController, type: :controller
       expect(JSON.parse(response.body)["reason"]).to eq("remote_session_invalid")
     end
 
+    it "keeps the session alive when remote validation errors and policy is fail_open" do
+      configure_cas_session_guard(
+        remote_validation_failure_policy: :fail_open,
+        session_validator: lambda do |**_args|
+          { status: :error, reason: "network_error", error_class: "SocketError" }
+        end
+      )
+
+      events = capture_notifications("heartbeat") { get :show }
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to include("ok" => true)
+      expect(controller.session[:cas_user]).to eq("admin@example.com")
+      expect(events.map { |event| event.payload[:outcome] }).to include("validator_error", "ok")
+    end
+
+    it "clears the session when remote validation errors and policy is fail_closed" do
+      configure_cas_session_guard(
+        remote_validation_failure_policy: :fail_closed,
+        session_validator: lambda do |**_args|
+          { status: :error, reason: "network_error", error_class: "SocketError" }
+        end
+      )
+
+      events = capture_notifications("heartbeat") { get :show }
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(controller.session[:cas_user]).to be_nil
+      expect(JSON.parse(response.body)["reason"]).to eq("remote_session_invalid")
+      expect(events.map { |event| event.payload[:outcome] }).to include("validator_error", "unauthorized")
+    end
+
     it "clears the session and returns 401 when the CAS ticket was invalidated by back-channel logout" do
       CasinoClientSessionGuard.configuration.sign_out_store.invalidate(
         ticket: "ST-123",

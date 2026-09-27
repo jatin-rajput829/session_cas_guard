@@ -75,24 +75,32 @@ module CasinoClientSessionGuard
 
     # Validates the user's CAS ticket with the CAS provider.
     # Calls the configured validator (typically the CasinoSessionValidator).
-    # Returns false if validation fails or an error occurs.
+    # The validator can return either:
+    # - `true` / `false` for the original boolean contract
+    # - a structured hash like `{ status: :valid | :invalid | :error, reason: "..." }`
+    # Only structured `:error` results participate in the configurable fail-open/fail-closed policy.
     def remote_session_valid?
       validator = CasinoClientSessionGuard.configuration.session_validator
       return false unless validator.respond_to?(:call)
 
-      # Call the validator with the CAS ticket and service URL
-      validator.call(
+      # Ask the validator to check the current ticket against CAS.
+      # This can produce a boolean for legacy validators or a structured result for policy-aware validators.
+      result = validator.call(
         cas_service_url: session_manager.cas_service_url,
         cas_ticket: session_manager.cas_ticket
-      ) == true
+      )
+
+      normalize_remote_validation_result(result)
     rescue StandardError => error
-      # Log validation errors for debugging but fail safely
+      # If the validator itself crashes, apply the configured policy the same way we do
+      # for transport failures returned by the structured validator path.
       Rails.logger.error(
         "[CasinoClientSessionGuard] remote CAS validation failed: " \
         "#{error.class}: #{error.message}"
       )
 
-      false
+      instrument_heartbeat("validator_error", reason: error.class.name)
+      remote_validation_failure_policy == :fail_open
     end
 
     # Returns a JSON error response with the CAS login URL.
@@ -124,6 +132,31 @@ module CasinoClientSessionGuard
         authenticated: session_manager.authenticated?,
         ticket_present: session_manager.cas_ticket.present?
       )
+    end
+
+    # Convert validator output into a final allow/deny decision.
+    # Legacy boolean validators stay strict to preserve backward compatibility.
+    # Structured `:error` results are the only branch controlled by configuration.
+    def normalize_remote_validation_result(result)
+      return true if result == true
+      return false if result == false
+      return false unless result.is_a?(Hash)
+
+      case result[:status]&.to_sym
+      when :valid
+        true
+      when :invalid
+        false
+      when :error
+        instrument_heartbeat("validator_error", reason: result[:reason].to_s)
+        remote_validation_failure_policy == :fail_open
+      else
+        false
+      end
+    end
+
+    def remote_validation_failure_policy
+      CasinoClientSessionGuard.configuration.remote_validation_failure_policy
     end
   end
 end

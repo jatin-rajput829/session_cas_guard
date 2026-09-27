@@ -6,6 +6,11 @@ module CasinoClientSessionGuard
   # Configuration class stores all settings for CasinoClientSessionGuard.
   # These settings control how sessions are validated, heartbeats work, and modals are displayed.
   class Configuration
+    # These policies decide what to do when CAS validation could not complete.
+    # `fail_closed` is the strict option: treat the session as invalid.
+    # `fail_open` is the tolerant option: keep the local session until a later check succeeds or fails definitively.
+    REMOTE_VALIDATION_FAILURE_POLICIES = %i[fail_closed fail_open].freeze
+
     # List of settings that must be configured before the gem can work properly.
     REQUIRED_ATTRIBUTES = %i[
       heartbeat_path
@@ -29,6 +34,7 @@ module CasinoClientSessionGuard
 
                   # Custom validation logic - override how sessions are validated
                   :session_validator,
+                  :remote_validation_failure_policy,
                   :reauthentication_url,
 
                   # CASINO server setup - CAS provider configuration
@@ -70,6 +76,9 @@ module CasinoClientSessionGuard
 
       # Custom validation - use your own logic to validate CAS tickets
       @session_validator = nil
+      # Preserve the gem's existing behavior by default: if CAS validation cannot complete,
+      # reject the local session unless the host app explicitly opts into fail-open handling.
+      @remote_validation_failure_policy = :fail_closed
       @reauthentication_url = nil
 
       # CAS provider details - must be configured
@@ -91,17 +100,21 @@ module CasinoClientSessionGuard
       @modal_icon = nil
 
       # Default validator - calls CAS provider to check if ticket is still valid
+      # It returns structured results so the heartbeat controller can distinguish
+      # a definite invalid ticket from a temporary transport or server failure.
       @session_validator = lambda do |cas_service_url:, cas_ticket:|
         CasinoClientSessionGuard::Validators::CasinoSessionValidator.new(
           cas_service_url: cas_service_url,
           cas_ticket: cas_ticket
-        ).valid?
+        ).validation_result
       end
     end
 
     # Checks if all required settings are configured.
     # Raises ConfigurationError if any required setting is missing.
     def validate!
+      validate_remote_validation_failure_policy!
+
       missing_keys = REQUIRED_ATTRIBUTES.select do |attr|
         public_send(attr).blank?
       end
@@ -110,6 +123,16 @@ module CasinoClientSessionGuard
 
       raise ConfigurationError,
             "CasinoClientSessionGuard configuration error: #{missing_keys.join(', ')} cannot be blank"
+    end
+
+    private
+
+    def validate_remote_validation_failure_policy!
+      return if REMOTE_VALIDATION_FAILURE_POLICIES.include?(remote_validation_failure_policy)
+
+      raise ConfigurationError,
+            "CasinoClientSessionGuard configuration error: remote_validation_failure_policy " \
+            "must be one of #{REMOTE_VALIDATION_FAILURE_POLICIES.join(', ')}"
     end
   end
 end

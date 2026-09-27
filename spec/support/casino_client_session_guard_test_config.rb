@@ -14,6 +14,7 @@ module CasinoClientSessionGuardTestConfig
     heartbeat_interval: 60.seconds,
     heartbeat_path: "/admin/cas_session_guard/heartbeat",
     single_logout_enabled: true,
+    remote_validation_failure_policy: :fail_closed,
     casino_base_url: "https://casino.example.com",
     casino_api_token: "test-token",
     casino_validation_api_endpoint: "/api/v1/validate_ticket",
@@ -32,6 +33,7 @@ module CasinoClientSessionGuardTestConfig
       config.heartbeat_interval = heartbeat_interval
       config.heartbeat_path = heartbeat_path
       config.single_logout_enabled = single_logout_enabled
+      config.remote_validation_failure_policy = remote_validation_failure_policy
 
       config.casino_base_url = casino_base_url
       config.casino_api_token = casino_api_token
