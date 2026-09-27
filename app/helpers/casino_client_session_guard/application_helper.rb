@@ -39,6 +39,8 @@ module CasinoClientSessionGuard
     # Generates HTML meta tags needed by the browser-side session guard script.
     # These meta tags contain the heartbeat token, URL, and interval for session monitoring.
     def cas_session_guard_meta_tags
+      return "".html_safe unless cas_session_guard_heartbeat_enabled?
+
       safe_join(
         [
           # Token used to authenticate heartbeat requests from the browser
@@ -57,10 +59,23 @@ module CasinoClientSessionGuard
             content: (
               CasinoClientSessionGuard.configuration.heartbeat_interval.to_f * 1000
             ).to_i
+          ),
+          # Use a per-scope storage key so multiple guarded layouts do not share throttle state.
+          tag.meta(
+            name: "cas-session-guard-storage-key",
+            content: cas_session_guard_storage_key
           )
         ],
         "\n"
       )
+    end
+
+    # Renders the built-in browser heartbeat controller.
+    # Host apps can call this helper instead of maintaining a separate heartbeat.js file.
+    def render_cas_session_guard_javascript
+      return "".html_safe unless cas_session_guard_heartbeat_enabled?
+
+      render "casino_client_session_guard/session_guard_javascript"
     end
 
     # Returns the title text for the session expiration modal.
@@ -86,6 +101,17 @@ module CasinoClientSessionGuard
     # Returns the text shown while the modal is redirecting the browser.
     def cas_session_modal_redirecting_text
       CasinoClientSessionGuard.configuration.modal_redirecting_text
+    end
+
+    private
+
+    def cas_session_guard_heartbeat_enabled?
+      CasinoClientSessionGuard.configuration.heartbeat_enabled
+    end
+
+    def cas_session_guard_storage_key
+      heartbeat_path = CasinoClientSessionGuard.configuration.heartbeat_path.presence || "default"
+      "cas_session_guard:last_heartbeat_ping_at:#{heartbeat_path}"
     end
   end
 end
