@@ -26,6 +26,10 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
       expect(config.single_logout_enabled).to be(true)
     end
 
+    it "uses fail_closed for remote validation failures by default" do
+      expect(config.remote_validation_failure_policy).to eq(:fail_closed)
+    end
+
     it "uses default CAS session keys" do
       expect(config.cas_user_key).to eq(:cas_user)
       expect(config.cas_ticket_key).to eq(:cas_last_valid_ticket)
@@ -41,12 +45,25 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
       config.heartbeat_interval = 30.seconds
       config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
       config.single_logout_enabled = false
+      config.remote_validation_failure_policy = :fail_open
 
       expect(config.session_validation).to eq(2.minutes)
       expect(config.validation_buffer).to eq(90.seconds)
       expect(config.heartbeat_interval).to eq(30.seconds)
       expect(config.heartbeat_path).to eq("/admin/cas_session_guard/heartbeat")
       expect(config.single_logout_enabled).to be(false)
+      expect(config.remote_validation_failure_policy).to eq(:fail_open)
+    end
+  end
+
+  describe "validation" do
+    it "rejects unsupported remote validation failure policies" do
+      config.remote_validation_failure_policy = :unknown
+
+      expect { config.validate! }.to raise_error(
+        CasinoClientSessionGuard::ConfigurationError,
+        /remote_validation_failure_policy/
+      )
     end
   end
 end

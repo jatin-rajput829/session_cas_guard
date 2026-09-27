@@ -122,8 +122,8 @@
   config.validation_buffer = 75.seconds              # Extra time for safety
   config.heartbeat_interval = 60.seconds             # Browser check frequency
   config.single_logout_enabled = true                # Handle CAS back-channel logout POSTs
-  config.sign_out_ttl = 12.hours                     # How long to remember logouts
-
+  config.sign_out_ttl = 12.hours                     # How long to remember logouts and it is optional default is 12 hours.
+  config.remote_validation_failure_policy = :fail_closed # Or :fail_open for temporary CAS outages
   config.modal_title = "Session expired"
   config.modal_message = "Your session has expired"
   config.modal_detail = "You will be redirected to sign in"
@@ -175,6 +175,37 @@
   - The gem still supports heartbeat-based session detection.
 
   For a full walkthrough, see [docs/single_logout_flow.md](docs/single_logout_flow.md).
+
+  ### Remote Validation Failure Policy
+
+  The heartbeat performs remote CAS validation. Sometimes that validation fails because CAS timed out, the network is down, or the validator crashed before CAS answered.
+
+  You can configure what the gem should do in that case:
+
+  ```ruby
+  CasinoClientSessionGuard.configure do |config|
+    config.remote_validation_failure_policy = :fail_closed
+  end
+  ```
+
+  Supported values:
+
+  - `:fail_closed` - Treat remote validation failures as session failures and force reauthentication. This preserves the gem's original behavior.
+  - `:fail_open` - Keep the local session when remote validation could not complete, and try again on the next heartbeat.
+
+  Important behavior details:
+
+  - This policy only applies when the validator returns a structured error outcome, such as a timeout or transport failure.
+  - A definite invalid CAS response still logs the user out.
+  - Legacy custom validators that only return `true` or `false` keep the strict boolean behavior.
+
+  If you write a custom validator and want policy-aware handling, return a hash like this:
+
+  ```ruby
+  config.session_validator = lambda do |cas_service_url:, cas_ticket:|
+    { status: :error, reason: "network_error" }
+  end
+  ```
 
   ## Observability
 
