@@ -19,10 +19,10 @@ module CasinoClientSessionGuard
       format :json
 
       # Set short timeouts to fail fast if the CAS server is unresponsive.
-      # This prevents the app from hanging when CAS is down.
-      default_timeout 3
-      open_timeout 2
-      read_timeout 3
+      # This prevents the app from hanging when CAS is down & Short connection phase, long read phase.
+      default_timeout 5 # Safety ceiling to reclaim socket
+      open_timeout 2 # Fail fast if server unreachable
+      read_timeout 3 # Generous window for server to hold and push updates
 
       def initialize(cas_service_url:, cas_ticket: nil)
         @base_url        = configuration.casino_base_url.to_s.chomp("/")
