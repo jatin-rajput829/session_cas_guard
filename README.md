@@ -51,6 +51,7 @@
 
   body
     = render_cas_session_redirect_modal
+    = render_cas_session_guard_javascript
     = yield
   ```
 
@@ -120,6 +121,7 @@
   ```ruby
   config.session_validation = 5.minutes              # Validation window
   config.validation_buffer = 75.seconds              # Extra time for safety
+  config.heartbeat_enabled = true                    # Enable gem-owned browser heartbeat polling
   config.heartbeat_interval = 60.seconds             # Browser check frequency
   config.single_logout_enabled = true                # Handle CAS back-channel logout POSTs
   config.sign_out_ttl = 12.hours                     # How long to remember logouts and it is optional default is 12 hours.
@@ -138,6 +140,46 @@
   config.cas_service_url_key = :cas_service_url
   config.keep_alive_token_key = :keep_alive_token
   ```
+
+  ### Built-in Heartbeat JavaScript
+
+  The gem can now ship the browser heartbeat logic for you, so host apps do not need to maintain a separate `heartbeat.js` file.
+
+  Add all three helpers to your layout:
+
+  ```slim
+  head
+    = csrf_meta_tags
+    = cas_session_guard_meta_tags
+
+  body
+    = render_cas_session_redirect_modal
+    = render_cas_session_guard_javascript
+    = yield
+  ```
+
+  What the built-in script does:
+
+  - Sends heartbeat requests on page load and on the configured interval
+  - Skips duplicate pings after Turbo navigation
+  - Pauses work while the page is hidden
+  - Shows the session-expired modal and redirects when the server returns `401`
+  - Reloads the page when the keep-alive token is rejected with `403`
+  - Handles `turbo:submit-end` responses that carry `X-Session-Expired`
+
+  If you do not want browser heartbeat polling in a given environment, disable it:
+
+  ```ruby
+  CasinoClientSessionGuard.configure do |config|
+    config.heartbeat_enabled = false
+  end
+  ```
+
+  When `heartbeat_enabled` is `false`:
+
+  - `cas_session_guard_meta_tags` returns an empty string
+  - `render_cas_session_guard_javascript` returns an empty string
+  - The gem still supports protected controller requests and single logout handling
 
   ### Single Logout Setup
 

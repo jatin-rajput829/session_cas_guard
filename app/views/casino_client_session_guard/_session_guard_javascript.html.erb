@@ -1,0 +1,218 @@
+<script>
+  (() => {
+    // If Turbo renders a fresh copy of the layout, remove any previously installed
+    // controller first so we do not accumulate duplicate intervals or listeners.
+    window.CasinoClientSessionGuardHeartbeat?.destroy?.();
+
+    const state = {
+      intervalId: null,
+      visibilityHandler: null,
+      countdownId: null,
+      listeners: [],
+      redirecting: false
+    };
+
+    // All runtime values come from server-rendered meta tags, so the behavior stays
+    // configuration-driven and can be disabled by simply not rendering those tags.
+    const heartbeatIntervalMeta = document.querySelector('meta[name="cas-session-guard-heartbeat-interval"]');
+    const heartbeatUrlMeta = document.querySelector('meta[name="cas-session-guard-heartbeat-url"]');
+    const heartbeatTokenMeta = document.querySelector('meta[name="cas-session-guard-token"]');
+    const storageKeyMeta = document.querySelector('meta[name="cas-session-guard-storage-key"]');
+
+    const intervalMs = Number.parseInt(heartbeatIntervalMeta?.getAttribute("content") || "60000", 10);
+    const endpoint = heartbeatUrlMeta?.getAttribute("content");
+    const keepAliveToken = heartbeatTokenMeta?.getAttribute("content");
+    const storageKey = storageKeyMeta?.getAttribute("content") || "cas_session_guard:last_heartbeat_ping_at:default";
+    const modalElement = document.getElementById("session-redirect-modal");
+
+    const getLastPingedAt = () => {
+      const value = sessionStorage.getItem(storageKey);
+      return value ? Number.parseInt(value, 10) : null;
+    };
+
+    const setLastPingedAt = (time) => {
+      sessionStorage.setItem(storageKey, String(time));
+    };
+
+    // Prefer Bootstrap's modal API when available, but still fall back to a simple
+    // class-based reveal so the redirect flow works in lightweight setups too.
+    const showModal = () => {
+      if (!modalElement) return;
+
+      if (window.bootstrap?.Modal) {
+        window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        return;
+      }
+
+      modalElement.classList.add("show");
+      modalElement.style.display = "block";
+      modalElement.removeAttribute("aria-hidden");
+      document.body.classList.add("modal-open");
+    };
+
+    const redirectTo = (url) => {
+      if (!url || state.redirecting) return;
+
+      state.redirecting = true;
+      window.location.assign(url);
+    };
+
+    // Reuse the modal already rendered by the gem and drive its countdown from JavaScript.
+    const showSessionRedirectModal = (redirectUrl) => {
+      if (!modalElement) {
+        redirectTo(redirectUrl);
+        return;
+      }
+
+      const timerElement = modalElement.querySelector("[data-session-redirect-timer]");
+      const footerElement = modalElement.querySelector("[data-session-redirect-footer]");
+      const countdownSeconds = Number.parseInt(
+        modalElement.getAttribute("data-session-redirect-countdown") || "10",
+        10
+      );
+      const redirectingText = modalElement.getAttribute("data-session-redirect-redirecting-text") || "Redirecting";
+
+      if (state.countdownId) {
+        clearInterval(state.countdownId);
+        state.countdownId = null;
+      }
+
+      let remainingSeconds = countdownSeconds;
+
+      if (timerElement) timerElement.textContent = String(remainingSeconds);
+      if (footerElement) footerElement.textContent = redirectingText;
+
+      showModal();
+
+      state.countdownId = window.setInterval(() => {
+        remainingSeconds -= 1;
+
+        if (timerElement) timerElement.textContent = String(Math.max(remainingSeconds, 0));
+
+        if (remainingSeconds <= 0) {
+          clearInterval(state.countdownId);
+          state.countdownId = null;
+          redirectTo(redirectUrl);
+        }
+      }, 1000);
+    };
+
+    // Send heartbeats only while the page is visible and only once per configured interval.
+    // This prevents duplicate requests after Turbo navigation or tab switching.
+    const ping = () => {
+      if (!endpoint || !keepAliveToken) return;
+      if (document.visibilityState !== "visible") return;
+
+      const now = Date.now();
+      const lastPingedAt = getLastPingedAt();
+      if (lastPingedAt && now - lastPingedAt < intervalMs) return;
+
+      setLastPingedAt(now);
+
+      fetch(endpoint, {
+        method: "GET",
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+          "X-Keep-Alive-Token": keepAliveToken,
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      })
+        .then(async (response) => {
+          if (response.status === 401) {
+            const data = await response.json().catch(() => ({}));
+
+            if (data.redirect_url) {
+              showSessionRedirectModal(data.redirect_url);
+            } else {
+              window.location.reload();
+            }
+
+            return;
+          }
+
+          if (response.status === 403) {
+            window.location.reload();
+          }
+        })
+        .catch(() => {
+          // Server-side policy decides what a transport failure means.
+          // The browser does not need to show an extra error here.
+        });
+    };
+
+    const cleanup = () => {
+      if (state.intervalId) {
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+      }
+
+      if (state.visibilityHandler) {
+        document.removeEventListener("visibilitychange", state.visibilityHandler);
+        state.visibilityHandler = null;
+      }
+
+      if (state.countdownId) {
+        clearInterval(state.countdownId);
+        state.countdownId = null;
+      }
+    };
+
+    const start = () => {
+      state.redirecting = false;
+      cleanup();
+
+      state.intervalId = window.setInterval(ping, intervalMs);
+      ping();
+
+      state.visibilityHandler = () => {
+        if (document.visibilityState === "visible") ping();
+      };
+
+      document.addEventListener("visibilitychange", state.visibilityHandler);
+    };
+
+    const addListener = (eventName, handler) => {
+      document.addEventListener(eventName, handler);
+      state.listeners.push([eventName, handler]);
+    };
+
+    // When a Turbo form finishes with an expired session response, reuse the same modal logic.
+    addListener("turbo:submit-end", (event) => {
+      const response = event.detail.fetchResponse?.response;
+      if (!response) return;
+
+      const sessionExpired = response.headers.get("X-Session-Expired");
+      const redirectLocation = response.headers.get("Turbo-Visit-Location");
+
+      if (sessionExpired === "true" && redirectLocation) {
+        setLastPingedAt(Date.now());
+        showSessionRedirectModal(redirectLocation);
+      }
+    });
+
+    addListener("turbo:load", start);
+    addListener("turbo:before-cache", cleanup);
+    addListener("turbo:before-visit", cleanup);
+    addListener("DOMContentLoaded", start);
+
+    const destroy = () => {
+      cleanup();
+
+      state.listeners.forEach(([eventName, handler]) => {
+        document.removeEventListener(eventName, handler);
+      });
+
+      state.listeners = [];
+    };
+
+    window.CasinoClientSessionGuardHeartbeat = {
+      start,
+      cleanup,
+      destroy,
+      ping
+    };
+
+    start();
+  })();
+</script>

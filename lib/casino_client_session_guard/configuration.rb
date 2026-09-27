@@ -23,6 +23,7 @@ module CasinoClientSessionGuard
     # Session validation settings - how often to check if session is still valid
     attr_accessor :session_validation,
                   :validation_buffer,
+                  :heartbeat_enabled,
                   :heartbeat_interval,
                   :heartbeat_path,
 
@@ -61,6 +62,10 @@ module CasinoClientSessionGuard
 
       # Add extra time to avoid edge-case race conditions (default: 75 seconds)
       @validation_buffer = 75.seconds
+
+      # Browser heartbeat polling is enabled by default. Applications can disable it
+      # when they want to keep only the server-side CAS protection flow.
+      @heartbeat_enabled = true
 
       # Browser heartbeat interval to check session status (default: 60 seconds)
       @heartbeat_interval = 60.seconds

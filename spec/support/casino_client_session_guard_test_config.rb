@@ -11,6 +11,7 @@ module CasinoClientSessionGuardTestConfig
     keep_alive_token_key: :keep_alive_token,
     session_validation: 5.minutes,
     validation_buffer: 75.seconds,
+    heartbeat_enabled: true,
     heartbeat_interval: 60.seconds,
     heartbeat_path: "/admin/cas_session_guard/heartbeat",
     single_logout_enabled: true,
@@ -30,6 +31,7 @@ module CasinoClientSessionGuardTestConfig
 
       config.session_validation = session_validation
       config.validation_buffer = validation_buffer
+      config.heartbeat_enabled = heartbeat_enabled
       config.heartbeat_interval = heartbeat_interval
       config.heartbeat_path = heartbeat_path
       config.single_logout_enabled = single_logout_enabled

@@ -18,6 +18,10 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
       expect(config.heartbeat_interval).to eq(60.seconds)
     end
 
+    it "enables heartbeat JavaScript by default" do
+      expect(config.heartbeat_enabled).to be(true)
+    end
+
     it "uses the default gem heartbeat path" do
       expect(config.heartbeat_path).to eq("/cas_session_guard/heartbeat")
     end
@@ -42,6 +46,7 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
     it "allows runtime configuration overrides" do
       config.session_validation = 2.minutes
       config.validation_buffer = 90.seconds
+      config.heartbeat_enabled = false
       config.heartbeat_interval = 30.seconds
       config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
       config.single_logout_enabled = false
@@ -49,6 +54,7 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
 
       expect(config.session_validation).to eq(2.minutes)
       expect(config.validation_buffer).to eq(90.seconds)
+      expect(config.heartbeat_enabled).to be(false)
       expect(config.heartbeat_interval).to eq(30.seconds)
       expect(config.heartbeat_path).to eq("/admin/cas_session_guard/heartbeat")
       expect(config.single_logout_enabled).to be(false)
