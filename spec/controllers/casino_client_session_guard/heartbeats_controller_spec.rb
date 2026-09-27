@@ -21,10 +21,16 @@ RSpec.describe CasinoClientSessionGuard::HeartbeatsController, type: :controller
 
   describe "GET #show" do
     it "returns 200 and ok: true when the session is valid" do
-      get :show
+      events = capture_notifications("heartbeat") { get :show }
 
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)).to include("ok" => true)
+      expect(events.last.payload).to include(
+        outcome: "ok",
+        reason: "validated",
+        authenticated: true,
+        ticket_present: true
+      )
     end
 
     it "updates cas_authenticated_at to now + validation_buffer on successful validation" do
@@ -46,9 +52,13 @@ RSpec.describe CasinoClientSessionGuard::HeartbeatsController, type: :controller
     it "returns 403 when the heartbeat token does not match the session token" do
       request.headers["X-Keep-Alive-Token"] = "wrong-token"
 
-      get :show
+      events = capture_notifications("heartbeat") { get :show }
 
       expect(response).to have_http_status(:forbidden)
+      expect(events.last.payload).to include(
+        outcome: "forbidden",
+        reason: "invalid_keep_alive_token"
+      )
     end
 
     it "returns 401 when cas_user is missing" do

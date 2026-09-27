@@ -27,14 +27,24 @@ module CasinoClientSessionGuard
       manager = session_manager
 
       # Clear session if it has expired but user is still marked as authenticated
-      if manager.authenticated? && (manager.expired? || manager.ticket_invalidated?)
+      session_expired = manager.authenticated? && manager.expired?
+      ticket_invalidated = manager.authenticated? && manager.ticket_invalidated?
+
+      if session_expired || ticket_invalidated
         manager.clear!
       end
 
       # User is still authenticated and not expired - proceed with request
       if manager.authenticated?
         manager.initialize_authenticated_session!
+        instrument_protectable("allowed", reason: "authenticated")
         return
+      end
+
+      if session_expired
+        instrument_protectable("cleared", reason: "session_expired")
+      elsif ticket_invalidated
+        instrument_protectable("cleared", reason: "ticket_invalidated")
       end
 
       # AJAX/Turbo requests - return special headers instead of redirecting
@@ -46,11 +56,13 @@ module CasinoClientSessionGuard
       # Regular page request - use CASClient gem to validate the ticket parameter
       # This connects to CAS server and populates session with user info
       filter_passed = CASClient::Frameworks::Rails::Filter.filter(self, )
+      instrument_protectable("cas_filter", reason: filter_passed ? "passed" : "halted")
       return unless filter_passed
 
       # After CASClient validates the ticket, check if user is now in session
       if session[manager_user_key].present?
         manager.initialize_authenticated_session!
+        instrument_protectable("allowed", reason: "authenticated_via_cas")
       else
         handle_missing_cas_session
       end
@@ -73,6 +85,12 @@ module CasinoClientSessionGuard
         )
       end
 
+      CasinoClientSessionGuard::Observability.instrument(
+        "logout",
+        outcome: "performed",
+        ticket_present: ticket.present?
+      )
+
       # Redirect to CAS logout with optional redirect URL
       CASClient::Frameworks::Rails::Filter.logout(
         self,
@@ -90,6 +108,7 @@ module CasinoClientSessionGuard
       login_url = cas_login_url(target_url)
 
       if turbo_or_xhr_request?
+        instrument_protectable("rejected", reason: "missing_session", transport: "xhr")
         # Tell Turbo/AJAX client where to redirect the user
         response.set_header("Turbo-Visit-Location", login_url)
         response.set_header("X-Session-Expired", "true")
@@ -97,6 +116,7 @@ module CasinoClientSessionGuard
         return
       end
 
+      instrument_protectable("rejected", reason: "missing_session", transport: "html")
       # Regular redirect to CAS login
       redirect_to login_url
     end
@@ -180,6 +200,16 @@ module CasinoClientSessionGuard
     # Returns the session key name for the CAS user.
     def manager_user_key
       CasinoClientSessionGuard.configuration.cas_user_key
+    end
+
+    def instrument_protectable(outcome, reason:, transport: nil)
+      CasinoClientSessionGuard::Observability.instrument(
+        "protectable",
+        outcome: outcome,
+        reason: reason,
+        transport: transport,
+        authenticated: session_manager.authenticated?
+      )
     end
   end
 end

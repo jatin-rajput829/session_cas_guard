@@ -30,7 +30,10 @@ module CasinoClientSessionGuard
       # Returns true if the ticket is valid, false otherwise or if validation fails.
       def valid?
         # Ticket or service URL missing - cannot validate
-        return false if @cas_service_url.blank? || @base_url.blank? || @api_token.blank?
+        if @cas_service_url.blank? || @base_url.blank? || @api_token.blank?
+          instrument_validator(false, reason: "missing_configuration")
+          return false
+        end
 
         # Make HTTP request to CAS provider API with authentication token
         response = self.class.get(
@@ -46,9 +49,14 @@ module CasinoClientSessionGuard
         )
 
         # Check if request was successful and validation returned true
-        return false unless response.success?
-      
-        response.parsed_response&.dig('valid') == true
+        unless response.success?
+          instrument_validator(false, reason: "http_failure", http_success: false)
+          return false
+        end
+
+        valid = response.parsed_response&.dig('valid') == true
+        instrument_validator(valid, reason: valid ? "valid" : "invalid", http_success: true)
+        valid
       rescue HTTParty::Error, Net::OpenTimeout, Net::ReadTimeout, SocketError => e
         # Network errors are recoverable - log as warning and fail open (session remains valid)
         # This prevents network issues from prematurely invalidating sessions
@@ -56,6 +64,7 @@ module CasinoClientSessionGuard
           "[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: " \
           "#{e.class} - #{e.message}"
         )
+        instrument_validator(false, reason: "network_error", error_class: e.class.name)
         false
       rescue StandardError => e
         # Unexpected errors - log full details for investigation
@@ -63,6 +72,7 @@ module CasinoClientSessionGuard
           "[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Unexpected failure: " \
           "#{e.class} - #{e.message}\n#{e.backtrace&.first(3)&.join("\n")}"
         )
+        instrument_validator(false, reason: "unexpected_error", error_class: e.class.name)
         false
       end
 
@@ -70,6 +80,18 @@ module CasinoClientSessionGuard
 
       def configuration
         CasinoClientSessionGuard.configuration
+      end
+
+      def instrument_validator(valid, reason:, http_success: nil, error_class: nil)
+        CasinoClientSessionGuard::Observability.instrument(
+          "validator",
+          valid: valid,
+          reason: reason,
+          http_success: http_success,
+          error_class: error_class,
+          ticket_present: @cas_ticket.present?,
+          service_url_present: @cas_service_url.present?
+        )
       end
     end
   end
