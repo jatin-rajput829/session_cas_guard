@@ -3,7 +3,7 @@
 module CasinoClientSessionGuard
   # Protectable is a concern that enforces CAS session validation on controller actions.
   # Include this in your controller to require active CAS authentication.
-  # 
+  #
   # Usage:
   #   class MyController < ApplicationController
   #     include CasinoClientSessionGuard::Protectable

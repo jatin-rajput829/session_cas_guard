@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CasinoClientSessionGuard
   module TicketStores
     # RailsCacheStore tracks CAS tickets that have been signed out using Rails.cache.
