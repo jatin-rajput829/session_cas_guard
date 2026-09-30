@@ -31,6 +31,14 @@ blocks:
           - cache store
 
       jobs:
+        - name: "Style Check"
+          commands:
+            - bundle exec rubocop --only Lint/Syntax,Layout/TrailingWhitespace,Style/FrozenStringLiteralComment
+
+        - name: "Security Audit"
+          commands:
+            - bundle exec bundle-audit check --update
+
         - name: "RSpec - Unit & Integration Tests"
           commands:
             - bundle exec rspec --format progress --format json --out coverage/rspec.json
