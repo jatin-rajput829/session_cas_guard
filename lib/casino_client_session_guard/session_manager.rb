@@ -2,7 +2,6 @@
 
 # SessionManager handles CAS session lifecycle management.
 # It stores and retrieves session data like user info, tickets, and validation timestamps.
-# 
 # Sign-out detection flow:
 # 1. CAS server marks the ticket as signed out
 # 2. SessionManager detects this during validation
