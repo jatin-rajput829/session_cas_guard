@@ -6,7 +6,6 @@ require "active_support/core_ext/object/blank"
 require "active_support/security_utils"
 require "digest"
 require "securerandom"
-require "casclient"
 
 require_relative "casino_client_session_guard/version"
 require_relative "casino_client_session_guard/cas_client"

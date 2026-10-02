@@ -3,7 +3,7 @@
 
 `casino_client_session_guard` provides reusable CAS authentication, session validation, heartbeat and single logout handling for Rails applications.
 
-It is designed for applications that use CAS authentication and want one gem to own both the `rubycas-client` integration and the session guard flow.
+It is designed for applications that use CAS authentication and want one gem to own both the CAS login flow and the session guard flow.
 
 ## Features
 
@@ -49,7 +49,27 @@ CasinoClientSessionGuard.configure do |config|
 end
 ```
 
-The gem now loads and configures `rubycas-client` internally, so the host app does not need its own `require "casclient"` or `CASClient::Frameworks::Rails::Filter.configure` block.
+The gem now implements the CAS login, service-ticket validation, and logout flow itself, so the host app does not need a separate CAS client gem.
+
+If you are replacing an older two-gem setup, this is the only initializer you should keep in the host app:
+
+```ruby
+CasinoClientSessionGuard.configure do |config|
+  config.heartbeat_path = "/admin/cas_session_guard/heartbeat"
+  config.single_logout_enabled = true
+
+  config.cas_base_url = Rails.application.credentials.config[:cas_base_url]
+  config.cas_login_url = Rails.application.credentials.config[:cas_login_url]
+
+  config.casino_base_url = Rails.application.credentials.config[:cas_base_url]
+  config.casino_api_token = Rails.application.credentials.dig(:casino, :api_token)
+  config.casino_validation_api_endpoint = "/api/v1/validate_ticket"
+
+  config.modal_icon = "⚠"
+end
+```
+
+Remove any host-app `require "casclient"` line and any `CASClient::Frameworks::Rails::Filter` initializer or monkey patch.
 
 ### 3. Mount the engine
 ```ruby
@@ -139,7 +159,13 @@ config.validation_buffer = 75.seconds              # Extra time to prevent race 
 config.heartbeat_enabled = true                    # Enable browser heartbeat polling
 config.heartbeat_interval = 60.seconds             # Browser check frequency
 config.remote_validation_failure_policy = :fail_closed  # :fail_closed or :fail_open
-config.encode_extra_attributes_as = :json               # rubycas-client attribute encoding
+config.encode_extra_attributes_as = :json               # extra CAS attributes stored in session as JSON
+```
+
+Native CAS login uses `proxyValidate` by default to match the older MobsterLimited `rubycas-client` behavior. If your CAS server expects `serviceValidate` instead, set:
+
+```ruby
+config.cas_validate_url = "https://cas.example.com/serviceValidate"
 ```
 
 **Remote validation failure policy:**
@@ -287,7 +313,7 @@ end
 
 ### Built-in CAS Client Redirect Handling
 
-When Rails rejects external-host redirects with `ActionController::Redirecting::UnsafeRedirectError`, the gem automatically retries CAS login and logout redirects with `allow_other_host: true`. That replaces the host-app monkey patch normally added around `CASClient::Frameworks::Rails::Filter`.
+When Rails rejects external-host redirects with `ActionController::Redirecting::UnsafeRedirectError`, the gem automatically retries CAS login and logout redirects with `allow_other_host: true`.
 
 ### Custom Modal Icon
 

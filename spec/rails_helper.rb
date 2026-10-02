@@ -2,6 +2,7 @@
 
 ENV["RAILS_ENV"] ||= "test"
 
+require "spec_helper"
 require "rails"
 require "action_controller/railtie"
 require "action_view/railtie"

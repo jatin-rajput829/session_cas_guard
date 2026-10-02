@@ -39,15 +39,18 @@ module CasinoClientSessionGuard
                   :reauthentication_url,
                   :service_url,
 
-                  # CASINO server setup - CAS provider configuration
+                  # CASINO server setup - session heartbeat validation configuration
                   :casino_base_url,
                   :casino_api_token,
                   :casino_validation_api_endpoint,
 
-                  # CAS client setup - built-in login/logout handling
+                  # Native CAS auth setup - login/logout and ticket validation
                   :cas_base_url,
                   :cas_login_url,
+                  :cas_logout_url,
+                  :cas_validate_url,
                   :cas_logger,
+                  :cas_extra_attributes_key,
                   :encode_extra_attributes_as,
                   :allow_other_host_redirects,
 
@@ -103,7 +106,10 @@ module CasinoClientSessionGuard
       # CAS client settings - used to configure rubycas-client internally
       @cas_base_url = nil
       @cas_login_url = nil
+      @cas_logout_url = nil
+      @cas_validate_url = nil
       @cas_logger = nil
+      @cas_extra_attributes_key = :cas_extra_attributes
       @encode_extra_attributes_as = :json
       @allow_other_host_redirects = true
 

@@ -33,7 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "railties", ">= 6.1"
   spec.add_dependency "activesupport", ">= 6.1"
   spec.add_dependency "httparty", ">= 0.20"
-  spec.add_dependency "rubycas-client", ">= 2.3"
   spec.add_dependency "slim-rails"
 
   # Required only to develop and test the gem.

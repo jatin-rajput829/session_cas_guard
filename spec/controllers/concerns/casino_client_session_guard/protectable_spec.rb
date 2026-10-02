@@ -49,11 +49,11 @@ RSpec.describe CasinoClientSessionGuard::Protectable, type: :controller do
 
     it "calls CAS filter for full-page requests when the user is missing" do
       allow(controller).to receive(:turbo_or_xhr_request?).and_return(false)
-      allow(CASClient::Frameworks::Rails::Filter).to receive(:filter).and_return(true)
+      allow(CasinoClientSessionGuard::CasClient).to receive(:filter).and_return(true)
 
       get :index
 
-      expect(CASClient::Frameworks::Rails::Filter).to have_received(:filter)
+      expect(CasinoClientSessionGuard::CasClient).to have_received(:filter).with(controller)
     end
 
     it "returns early when the session is already authenticated and valid" do
@@ -75,7 +75,7 @@ RSpec.describe CasinoClientSessionGuard::Protectable, type: :controller do
       session[:cas_authenticated_at] = 6.minutes.ago
 
       allow(controller).to receive(:turbo_or_xhr_request?).and_return(false)
-      allow(CASClient::Frameworks::Rails::Filter).to receive(:filter).and_return(true)
+      allow(CasinoClientSessionGuard::CasClient).to receive(:filter).and_return(true)
 
       get :index
 
