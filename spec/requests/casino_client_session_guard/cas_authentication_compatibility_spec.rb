@@ -125,7 +125,7 @@ RSpec.describe "CAS authentication compatibility", type: :request do
         body: <<~XML,
           <cas:serviceResponse xmlns:cas="http://www.yale.edu/tp/cas">
             <cas:authenticationSuccess>
-              <cas:user>jatin@contentformobile.net</cas:user>
+              <cas:user>user@contentformobile.net</cas:user>
               <cas:attributes>
                 <cas:authenticationDate>2026-10-02T07:56:26Z</cas:authenticationDate>
                 <cas:longTermAuthenticationRequestTokenUsed>false</cas:longTermAuthenticationRequestTokenUsed>
@@ -142,7 +142,7 @@ RSpec.describe "CAS authentication compatibility", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(JSON.parse(response.body)).to include(
-      "cas_user" => "jatin@contentformobile.net",
+      "cas_user" => "user@contentformobile.net",
       "cas_ticket" => "ST-999",
       "cas_service_url" => "http://www.example.com/protected?locale=en",
       "cas_extra_attributes" => {
