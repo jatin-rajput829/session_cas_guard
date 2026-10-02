@@ -87,6 +87,7 @@ RSpec.describe CasinoClientSessionGuard::SessionManager do
       expect(session[:cas_last_valid_ticket]).to be_nil
       expect(session[:cas_service_url]).to be_nil
       expect(session[:keep_alive_token]).to be_nil
+      expect(session[:cas_extra_attributes]).to be_nil
     end
   end
 
@@ -105,6 +106,54 @@ RSpec.describe CasinoClientSessionGuard::SessionManager do
   describe "#cas_service_url" do
     it "returns the current CAS service URL" do
       expect(manager.cas_service_url).to eq("https://app.example.com/admin")
+    end
+  end
+
+  describe "#store_extra_attributes!" do
+    it "stores extra attributes in the session" do
+      attributes = { roles: ["admin", "user"], groups: ["engineering"] }
+      manager.store_extra_attributes!(attributes)
+
+      expect(session[:cas_extra_attributes]).to eq(attributes)
+    end
+  end
+
+  describe "#extra_attributes" do
+    it "returns stored extra attributes" do
+      attributes = { roles: ["admin"], groups: ["engineering"] }
+      session[:cas_extra_attributes] = attributes
+
+      expect(manager.extra_attributes).to eq(attributes)
+    end
+
+    it "returns an empty hash when no attributes are stored" do
+      expect(manager.extra_attributes).to eq({})
+    end
+  end
+
+  describe "#extra_attribute" do
+    it "returns a specific attribute by symbol key" do
+      session[:cas_extra_attributes] = { roles: ["admin", "user"] }
+
+      expect(manager.extra_attribute(:roles)).to eq(["admin", "user"])
+    end
+
+    it "returns a specific attribute by string key" do
+      session[:cas_extra_attributes] = { "groups" => ["engineering"] }
+
+      expect(manager.extra_attribute("groups")).to eq(["engineering"])
+    end
+
+    it "returns nil when attribute key does not exist" do
+      session[:cas_extra_attributes] = { roles: ["admin"] }
+
+      expect(manager.extra_attribute(:missing)).to be_nil
+    end
+
+    it "looks up by string key when symbol key is not found" do
+      session[:cas_extra_attributes] = { "roles" => ["admin"] }
+
+      expect(manager.extra_attribute(:roles)).to eq(["admin"])
     end
   end
 end

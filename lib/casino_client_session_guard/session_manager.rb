@@ -60,6 +60,7 @@ module CasinoClientSessionGuard
       session.delete(ticket_key)
       session.delete(service_url_key)
       session.delete(token_key)
+      session.delete(extra_attributes_key)
     end
 
     # Returns the heartbeat token used to verify browser requests.
@@ -75,6 +76,25 @@ module CasinoClientSessionGuard
     # Returns the service URL that CAS uses to validate the ticket.
     def cas_service_url
       session[service_url_key]
+    end
+
+    # Stores extra attributes from CAS (roles, groups, etc).
+    # Call this after CAS authentication with the attributes returned by CAS.
+    def store_extra_attributes!(attributes)
+      session[extra_attributes_key] = attributes
+    end
+
+    # Returns all extra attributes stored from CAS.
+    def extra_attributes
+      session[extra_attributes_key] || {}
+    end
+
+    # Returns a specific extra attribute by key.
+    # Examples:
+    #   manager.extra_attribute(:roles)
+    #   manager.extra_attribute('groups')
+    def extra_attribute(key)
+      extra_attributes[key] || extra_attributes[key.to_s]
     end
 
     private
@@ -99,6 +119,10 @@ module CasinoClientSessionGuard
 
     def token_key
       configuration.keep_alive_token_key
+    end
+
+    def extra_attributes_key
+      configuration.cas_extra_attributes_key
     end
 
     def validation_buffer

@@ -103,6 +103,26 @@ module CasinoClientSessionGuard
       CasinoClientSessionGuard.configuration.modal_redirecting_text
     end
 
+    # Returns CAS extra attributes from the current session.
+    # Typically used to access user roles, groups, or other metadata from CAS.
+    #
+    # Examples:
+    #   cas_extra_attributes                    # Returns all attributes as a hash
+    #   cas_extra_attributes(:roles)            # Returns the roles array
+    #   cas_extra_attributes['groups']          # Returns the groups array
+    def cas_extra_attributes(key = nil)
+      manager = CasinoClientSessionGuard::SessionManager.new(session)
+      return manager.extra_attributes if key.nil?
+
+      manager.extra_attribute(key)
+    end
+
+    # Convenience helper to retrieve user roles from CAS extra attributes.
+    # Returns nil if roles are not present.
+    def cas_user_roles
+      cas_extra_attributes(:roles)
+    end
+
     private
 
     def cas_session_guard_heartbeat_enabled?

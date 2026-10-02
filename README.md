@@ -113,6 +113,7 @@ session[:cas_last_valid_ticket]       # CAS ticket (required)
 session[:cas_last_valid_ticket_service]  # Application URL from CAS (required)
 session[:cas_authenticated_at]        # Authentication time (auto-managed)
 session[:keep_alive_token]            # Heartbeat token (auto-generated)
+session[:cas_extra_attributes]        # CAS extra attributes: roles, groups, etc (optional)
 ```
 
 Example after CAS callback:
@@ -121,6 +122,12 @@ session[:cas_user] = current_user.email
 session[:cas_last_valid_ticket] = params[:ticket]
 session[:cas_last_valid_ticket_service] = request.original_url
 session[:cas_authenticated_at] = Time.current + 75.seconds
+
+# Store CAS extra attributes (roles, groups, etc.) if available
+if cas_response['attributes'].present?
+  session_manager = CasinoClientSessionGuard::SessionManager.new(session)
+  session_manager.store_extra_attributes!(cas_response['attributes'])
+end
 ```
 
 To customize session key names:
@@ -130,8 +137,61 @@ CasinoClientSessionGuard.configure do |config|
   config.cas_ticket_key = :cas_last_valid_ticket
   config.cas_service_url_key = :cas_last_valid_ticket_service
   config.keep_alive_token_key = :keep_alive_token
+  config.cas_extra_attributes_key = :cas_extra_attributes  # Customize the extra attributes key
 end
 ```
+
+## Working with CAS Extra Attributes
+
+CAS servers can return additional user metadata beyond the username. The gem supports storing and retrieving these attributes (roles, groups, email, etc.) from the session.
+
+### Storing Extra Attributes
+
+After CAS authentication, store the extra attributes returned by your CAS provider:
+
+```ruby
+# In your CAS authentication callback
+session_manager = CasinoClientSessionGuard::SessionManager.new(session)
+session_manager.store_extra_attributes!(cas_response['attributes'])
+```
+
+### Retrieving Extra Attributes
+
+**In controllers:**
+```ruby
+manager = CasinoClientSessionGuard::SessionManager.new(session)
+roles = manager.extra_attribute(:roles)
+groups = manager.extra_attribute(:groups)
+all_attributes = manager.extra_attributes
+```
+
+**In views using helpers:**
+```erb
+<!-- Get all extra attributes -->
+<%= cas_extra_attributes.inspect %>
+
+<!-- Get a specific attribute by key -->
+<%= cas_extra_attributes(:roles).inspect %>
+
+<!-- Convenience helper for roles -->
+<%= cas_user_roles.inspect %>
+
+<!-- Use in conditionals -->
+<% if cas_user_roles&.include?('admin') %>
+  <p>Welcome, admin!</p>
+<% end %>
+```
+
+### Extra Attributes Configuration
+
+```ruby
+CasinoClientSessionGuard.configure do |config|
+  config.cas_extra_attributes_key = :cas_extra_attributes  # Session key to store attributes
+  config.encode_extra_attributes_as = :json                # Encoding format (defaults to :json)
+end
+```
+
+Extra attributes are automatically cleared when the session is cleared (logout or session expiration).
 
 ## Configuration Reference
 
@@ -450,6 +510,14 @@ manager.expired?                        # Has session timed out?
 manager.initialize_authenticated_session!  # Setup new session
 manager.mark_cas_session_validated!     # Refresh timestamp
 manager.clear!                          # Clear all CAS data
+manager.heartbeat_token                 # Get the heartbeat token
+manager.cas_ticket                      # Get the CAS ticket
+manager.cas_service_url                 # Get the service URL
+
+# Extra attributes
+manager.store_extra_attributes!(attrs)  # Store CAS extra attributes
+manager.extra_attributes                # Get all stored extra attributes
+manager.extra_attribute(:roles)         # Get specific attribute by key
 ```
 
 ### Heartbeat Endpoint
@@ -473,6 +541,11 @@ cas_session_modal_title                  # Get modal title
 cas_session_modal_message                # Get modal message
 cas_session_modal_detail                 # Get modal detail
 cas_session_modal_countdown_seconds      # Get countdown duration
+
+# Extra attributes
+cas_extra_attributes                     # Get all extra attributes as hash
+cas_extra_attributes(:roles)             # Get specific attribute by key
+cas_user_roles                           # Convenience helper for roles
 ```
 
 ### Controller Methods
