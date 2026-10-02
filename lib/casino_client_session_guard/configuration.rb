@@ -37,11 +37,19 @@ module CasinoClientSessionGuard
                   :session_validator,
                   :remote_validation_failure_policy,
                   :reauthentication_url,
+                  :service_url,
 
                   # CASINO server setup - CAS provider configuration
                   :casino_base_url,
                   :casino_api_token,
                   :casino_validation_api_endpoint,
+
+                  # CAS client setup - built-in login/logout handling
+                  :cas_base_url,
+                  :cas_login_url,
+                  :cas_logger,
+                  :encode_extra_attributes_as,
+                  :allow_other_host_redirects,
 
                   # Sign-Out handling - how to track logged-out sessions
                   :single_logout_enabled,
@@ -85,11 +93,19 @@ module CasinoClientSessionGuard
       # reject the local session unless the host app explicitly opts into fail-open handling.
       @remote_validation_failure_policy = :fail_closed
       @reauthentication_url = nil
+      @service_url = nil
 
       # CAS provider details - must be configured
       @casino_base_url = nil
       @casino_api_token = nil
       @casino_validation_api_endpoint = nil
+
+      # CAS client settings - used to configure rubycas-client internally
+      @cas_base_url = nil
+      @cas_login_url = nil
+      @cas_logger = nil
+      @encode_extra_attributes_as = :json
+      @allow_other_host_redirects = true
 
       # Track which CAS tickets have been logged out (default: Rails cache)
       @single_logout_enabled = true
@@ -139,5 +155,6 @@ module CasinoClientSessionGuard
             "CasinoClientSessionGuard configuration error: remote_validation_failure_policy " \
             "must be one of #{REMOTE_VALIDATION_FAILURE_POLICIES.join(', ')}"
     end
+
   end
 end

@@ -40,6 +40,11 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
       expect(config.cas_service_url_key).to eq(:cas_last_valid_ticket_service)
       expect(config.keep_alive_token_key).to eq(:keep_alive_token)
     end
+
+    it "defaults CAS client integration to JSON attributes and safe cross-host redirects" do
+      expect(config.encode_extra_attributes_as).to eq(:json)
+      expect(config.allow_other_host_redirects).to be(true)
+    end
   end
 
   describe "overrides" do
@@ -70,6 +75,17 @@ RSpec.describe CasinoClientSessionGuard::Configuration do
         CasinoClientSessionGuard::ConfigurationError,
         /remote_validation_failure_policy/
       )
+    end
+
+    it "does not require CAS client configuration for non-redirect flows" do
+      config.casino_base_url = "https://casino.example.com"
+      config.casino_api_token = "test-token"
+      config.casino_validation_api_endpoint = "/api/v1/validate_ticket"
+      config.modal_icon = "⚠"
+      config.cas_base_url = nil
+      config.cas_login_url = nil
+
+      expect { config.validate! }.not_to raise_error
     end
   end
 end

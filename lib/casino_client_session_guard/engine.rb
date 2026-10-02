@@ -14,6 +14,10 @@ module CasinoClientSessionGuard
       app.middleware.use CasinoClientSessionGuard::SingleLogoutMiddleware
     end
 
+    config.after_initialize do
+      CasinoClientSessionGuard::CasClient.configure!
+    end
+
     # initializer "cas_session_guard.autoload" do
     #   ActiveSupport.on_load(:action_controller) do
     #     require "cas_session_guard/session_manager"

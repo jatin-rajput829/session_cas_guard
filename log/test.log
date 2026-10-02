@@ -1,0 +1,1048 @@
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.4ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.3ms | GC: 0.2ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 2ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 2ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 2ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 3ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.6ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.3ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 2ms (Views: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 1ms (GC: 0.3ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 2ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 2ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 10ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 5ms (GC: 1.5ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.1ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 4ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.4ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+  Rendered casino_client_session_guard/_session_redirect_javascript.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_redirect_javascript.html.erb (Duration: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 2ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 2ms (GC: 0.2ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 2ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 3ms (GC: 1.2ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 1.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_redirect_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_redirect_javascript.html.erb (Duration: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 2ms (GC: 1.2ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 1ms (GC: 0.8ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.3ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 2ms (GC: 0.8ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 3ms (GC: 1.9ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 1ms (GC: 0.8ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.1ms)
+Processing by AnonymousController#index as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 500 Internal Server Error in 0ms (GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.2ms | GC: 0.1ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 1ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.2ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 3ms (Views: 0.1ms | GC: 3.2ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 2ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 3ms (GC: 1.8ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.8ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 1ms (GC: 0.1ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.3ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.3ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.0ms | GC: 0.5ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 1ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 404 Not Found in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"ticket"=>"ST-123"}
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n  <samlp:SessionIndex>ST-456</samlp:SessionIndex>\n  <samlp:SessionIndex>ST-789</samlp:SessionIndex>\n</samlp:LogoutRequest>\n"}
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+Completed 200 OK in 1ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::SingleLogoutsController#create as HTML
+  Parameters: {"logoutRequest"=>"<logout></logout>"}
+Completed 400 Bad Request in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+  Rendered casino_client_session_guard/_session_guard_javascript.html.erb (Duration: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Redirected to 
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.2ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 7ms (GC: 5.5ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 1ms (GC: 0.2ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 1ms (Views: 0.3ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 200 OK in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 403 Forbidden in 0ms (GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.0ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+Processing by CasinoClientSessionGuard::HeartbeatsController#show as HTML
+Completed 401 Unauthorized in 0ms (Views: 0.1ms | GC: 0.0ms)
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+[CasinoClientSessionGuard::Validators::CasinoSessionValidator] Network error: SocketError - Network error
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Completed 200 OK in 0ms (GC: 0.0ms)
+Processing by AnonymousController#index as HTML
+Open redirect to "https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous" detected
+Redirected to https://cas.example.com/login?service=http%3A%2F%2Ftest.host%2Fanonymous
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 302 Found in 1ms (GC: 0.0ms)
+Processing by AnonymousController#index as JS
+Filter chain halted as :enforce_cas_session rendered or redirected
+Completed 401 Unauthorized in 0ms (GC: 0.0ms)

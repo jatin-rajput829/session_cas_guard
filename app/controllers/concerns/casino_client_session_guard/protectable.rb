@@ -55,7 +55,7 @@ module CasinoClientSessionGuard
 
       # Regular page request - use CASClient gem to validate the ticket parameter
       # This connects to CAS server and populates session with user info
-      filter_passed = CASClient::Frameworks::Rails::Filter.filter(self, )
+      filter_passed = CasinoClientSessionGuard::CasClient.filter(self)
       instrument_protectable("cas_filter", reason: filter_passed ? "passed" : "halted")
       return unless filter_passed
 
@@ -92,7 +92,7 @@ module CasinoClientSessionGuard
       )
 
       # Redirect to CAS logout with optional redirect URL
-      CASClient::Frameworks::Rails::Filter.logout(
+      CasinoClientSessionGuard::CasClient.logout(
         self,
         redirect_url || configured_fallback_url
       )
@@ -123,8 +123,7 @@ module CasinoClientSessionGuard
 
     # Builds the CAS login URL with the current page as the service (redirect target).
     def cas_login_url(service_url)
-      client = CASClient::Frameworks::Rails::Filter.client
-      client.add_service_to_login_url(service_url)
+      CasinoClientSessionGuard::CasClient.login_url_for(service_url)
     end
 
     # Returns a session manager instance for the current request.

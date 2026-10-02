@@ -5,6 +5,7 @@ PATH
       activesupport (>= 6.1)
       httparty (>= 0.20)
       railties (>= 6.1)
+      rubycas-client (>= 2.3)
       slim-rails
 
 GEM
@@ -275,6 +276,8 @@ GEM
       regexp_parser (>= 2.0)
       rubocop (~> 1.86, >= 1.86.2)
     ruby-progressbar (1.13.0)
+    rubycas-client (2.3.9)
+      activesupport
     securerandom (0.4.1)
     slim (5.2.2)
       temple (~> 0.10.0)

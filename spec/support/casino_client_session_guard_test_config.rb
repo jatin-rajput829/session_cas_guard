@@ -19,6 +19,8 @@ module CasinoClientSessionGuardTestConfig
     casino_base_url: "https://casino.example.com",
     casino_api_token: "test-token",
     casino_validation_api_endpoint: "/api/v1/validate_ticket",
+    cas_base_url: "https://cas.example.com",
+    cas_login_url: "https://cas.example.com/login",
     session_validator: nil,
     reauthentication_url: DEFAULT_REAUTHENTICATION_URL,
     modal_icon: "⚠"
@@ -40,6 +42,8 @@ module CasinoClientSessionGuardTestConfig
       config.casino_base_url = casino_base_url
       config.casino_api_token = casino_api_token
       config.casino_validation_api_endpoint = casino_validation_api_endpoint
+      config.cas_base_url = cas_base_url
+      config.cas_login_url = cas_login_url
 
       config.session_validator =
         session_validator ||

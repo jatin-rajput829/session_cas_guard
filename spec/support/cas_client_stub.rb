@@ -6,8 +6,20 @@ unless defined?(CASClient)
     module Frameworks
       module Rails
         class Filter
+          class << self
+            attr_reader :configuration
+          end
+
           def self.filter(controller, options = {})
             true
+          end
+
+          def self.configure(options = {})
+            @configuration = options
+          end
+
+          def self.login_url(controller)
+            configuration && configuration[:login_url]
           end
 
           def self.client
@@ -22,6 +34,12 @@ unless defined?(CASClient)
         class Client
           def add_service_to_login_url(service_url)
             "https://cas.example.com/login?service=#{CGI.escape(service_url)}"
+          end
+
+          def logout_url(service_url = nil)
+            return "https://cas.example.com/logout" if service_url.nil?
+
+            "https://cas.example.com/logout?service=#{CGI.escape(service_url)}"
           end
         end
       end
