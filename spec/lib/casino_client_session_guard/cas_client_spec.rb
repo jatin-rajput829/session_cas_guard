@@ -11,6 +11,7 @@ RSpec.describe CasinoClientSessionGuard::CasClient, type: :controller do
 
   before do
     configure_cas_session_guard
+    request.env["HTTPS"] = "on"
     request.env["HTTP_HOST"] = "app.example.com"
     allow(controller.request).to receive(:original_url).and_return("https://app.example.com/admin")
   end
@@ -85,6 +86,16 @@ RSpec.describe CasinoClientSessionGuard::CasClient, type: :controller do
       request.env["HTTP_REFERER"] = "https://app.example.com/admin"
       expect(controller).to receive(:redirect_to).with(
         "https://cas.example.com/logout?destination=https%3A%2F%2Fapp.example.com%2Fadmin&gateway=true",
+        allow_other_host: true
+      )
+
+      described_class.logout(controller)
+    end
+
+    it "ignores external destinations to prevent open redirects" do
+      request.env["HTTP_REFERER"] = "https://evil.example.net/phish"
+      expect(controller).to receive(:redirect_to).with(
+        "https://cas.example.com/logout",
         allow_other_host: true
       )
 

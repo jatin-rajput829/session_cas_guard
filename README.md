@@ -566,14 +566,6 @@ bundle install
 bundle exec rspec
 ```
 
-Test results: **41 examples, 90% passing**
-
-By component:
-- SessionManager: 80% ✓
-- HeartbeatsController: 88% ✓
-- Configuration: 100% ✓
-- Protectable: 100% ✓
-
 Run a specific test:
 ```bash
 bundle exec rspec spec/lib/casino_client_session_guard/session_manager_spec.rb

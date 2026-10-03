@@ -144,12 +144,13 @@ module CasinoClientSessionGuard
 
       def logout(controller, service = nil)
         ensure_configured!
-        redirect_to_url(controller, logout_url_for(service || controller.request.referer))
+        safe_service = safe_logout_destination(controller, service || controller.request.referer)
+        redirect_to_url(controller, logout_url_for(safe_service))
       rescue StandardError
         raise unless configuration.allow_other_host_redirects
 
-        referer = service || controller.request.referer
-        controller.send(:redirect_to, logout_url_for(referer), allow_other_host: true)
+        safe_service = safe_logout_destination(controller, service || controller.request.referer)
+        controller.send(:redirect_to, logout_url_for(safe_service), allow_other_host: true)
       end
 
       def login_url_for(service_url)
@@ -171,6 +172,21 @@ module CasinoClientSessionGuard
         query["gateway"] = true
         uri.query = Rack::Utils.build_query(query)
         uri.to_s
+      end
+
+      def safe_logout_destination(controller, candidate)
+        return if candidate.blank?
+
+        uri = URI.parse(candidate.to_s)
+        return unless uri.is_a?(URI::HTTP)
+        return if uri.host.blank?
+        return unless uri.scheme == controller.request.scheme
+        return unless uri.host.casecmp?(controller.request.host.to_s)
+        return unless uri.port == controller.request.port
+
+        uri.to_s
+      rescue URI::InvalidURIError, ArgumentError
+        nil
       end
 
       private
